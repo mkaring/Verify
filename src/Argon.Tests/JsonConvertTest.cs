@@ -608,9 +608,9 @@ public class JsonConvertTest : TestFixtureBase
         Assert.Equal("-1.0", JsonConvert.ToString(-1d));
         Assert.Equal("1.01", JsonConvert.ToString(1.01));
         Assert.Equal("1.001", JsonConvert.ToString(1.001));
-        Assert.Equal(JsonConvert.PositiveInfinity, JsonConvert.ToString(double.PositiveInfinity));
-        Assert.Equal(JsonConvert.NegativeInfinity, JsonConvert.ToString(double.NegativeInfinity));
-        Assert.Equal(JsonConvert.NaN, JsonConvert.ToString(double.NaN));
+        Assert.Equal(JsonConvert.PositiveInfinity, JsonConvert.ToString(Double.PositiveInfinity));
+        Assert.Equal(JsonConvert.NegativeInfinity, JsonConvert.ToString(Double.NegativeInfinity));
+        Assert.Equal(JsonConvert.NaN, JsonConvert.ToString(Double.NaN));
     }
 
     [Fact]
@@ -628,8 +628,8 @@ public class JsonConvertTest : TestFixtureBase
         Assert.Equal("1.0", JsonConvert.ToString(1m));
         Assert.Equal("1.01", JsonConvert.ToString(1.01m));
         Assert.Equal("1.001", JsonConvert.ToString(1.001m));
-        Assert.Equal("79228162514264337593543950335.0", JsonConvert.ToString(decimal.MaxValue));
-        Assert.Equal("-79228162514264337593543950335.0", JsonConvert.ToString(decimal.MinValue));
+        Assert.Equal("79228162514264337593543950335.0", JsonConvert.ToString(Decimal.MaxValue));
+        Assert.Equal("-79228162514264337593543950335.0", JsonConvert.ToString(Decimal.MinValue));
     }
 
     [Fact]
@@ -964,15 +964,15 @@ public class JsonConvertTest : TestFixtureBase
     public void IntegerLengthOverflows()
     {
         // Maximum javascript number length (in characters) is 380
-        var o = JObject.Parse(@"{""biginteger"":" + new string('9', 380) + "}");
+        var o = JObject.Parse(@"{""biginteger"":" + new String('9', 380) + "}");
         var v = (JValue)o["biginteger"];
         Assert.Equal(JTokenType.Integer, v.Type);
         Assert.Equal(typeof(BigInteger), v.Value.GetType());
-        Assert.Equal(BigInteger.Parse(new string('9', 380)), (BigInteger)v.Value);
+        Assert.Equal(BigInteger.Parse(new String('9', 380)), (BigInteger)v.Value);
 
         XUnitAssert.Throws<JsonReaderException>(
-            () => JObject.Parse(@"{""biginteger"":" + new string('9', 381) + "}"),
-            $"JSON integer {new string('9', 381)} is too large to parse. Path 'biginteger', line 1, position 395.");
+            () => JObject.Parse(@"{""biginteger"":" + new String('9', 381) + "}"),
+            $"JSON integer {new String('9', 381)} is too large to parse. Path 'biginteger', line 1, position 395.");
     }
 
     [Fact]

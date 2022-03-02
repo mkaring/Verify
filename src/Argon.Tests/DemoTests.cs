@@ -3,6 +3,7 @@
 // as found in the license.md file.
 
 using System.Buffers;
+using System.Data;
 
 public class DemoTests : TestFixtureBase
 {

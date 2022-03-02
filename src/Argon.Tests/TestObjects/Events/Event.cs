@@ -54,7 +54,7 @@ public sealed class Event
             UserId = GetCurrentUserId();
         }
         //If _stackTrace = Nothing Then _stackTrace = Environment.StackTrace
-        Sublocation ??= GetCurrentSubLocation();
+        this.Sublocation ??= GetCurrentSubLocation();
     }
 
     public override string ToString()

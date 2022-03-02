@@ -6,5 +6,5 @@ namespace TestObjects;
 
 public class MessageWithIsoDate
 {
-    public string IsoDate { get; set; }
+    public String IsoDate { get; set; }
 }

@@ -48,6 +48,12 @@ class JsonSerializerProxy : JsonSerializer
         set => serializer.ContractResolver = value;
     }
 
+    public override MissingMemberHandling? MissingMemberHandling
+    {
+        get => serializer.MissingMemberHandling;
+        set => serializer.MissingMemberHandling = value;
+    }
+
     public override NullValueHandling? NullValueHandling
     {
         get => serializer.NullValueHandling;

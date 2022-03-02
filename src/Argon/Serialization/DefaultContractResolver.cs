@@ -192,6 +192,7 @@ public class DefaultContractResolver : IContractResolver
         {
             contract.ItemRequired = attribute.itemRequired;
             contract.ItemNullValueHandling = attribute.itemNullValueHandling;
+            contract.MissingMemberHandling = attribute.missingMemberHandling;
 
             if (attribute.NamingStrategyType != null)
             {

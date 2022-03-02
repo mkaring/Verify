@@ -11,7 +11,7 @@ public class ClassWithArray
 
     public ClassWithArray()
     {
-        bar = new List<long> { int.MaxValue };
+        bar = new List<Int64> { int.MaxValue };
     }
 
     [JsonProperty("foo")]

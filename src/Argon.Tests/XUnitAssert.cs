@@ -1,4 +1,6 @@
-﻿public class XUnitAssert
+﻿using System.Text.RegularExpressions;
+
+public class XUnitAssert
 {
     public static void AreEqual(double expected, double actual, double r)
     {

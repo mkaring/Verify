@@ -462,7 +462,7 @@ public class JValueTests : TestFixtureBase
     [Fact]
     public void ConvertsToInt32()
     {
-        Assert.Equal(int.MaxValue, Convert.ToInt32(new JValue(int.MaxValue)));
+        Assert.Equal(Int32.MaxValue, Convert.ToInt32(new JValue(Int32.MaxValue)));
     }
 
     [Fact]
@@ -480,61 +480,61 @@ public class JValueTests : TestFixtureBase
     [Fact]
     public void ConvertsToSByte()
     {
-        Assert.Equal(sbyte.MaxValue, Convert.ToSByte(new JValue(sbyte.MaxValue)));
+        Assert.Equal(SByte.MaxValue, Convert.ToSByte(new JValue(SByte.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToByte()
     {
-        Assert.Equal(byte.MaxValue, Convert.ToByte(new JValue(byte.MaxValue)));
+        Assert.Equal(Byte.MaxValue, Convert.ToByte(new JValue(Byte.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToInt16()
     {
-        Assert.Equal(short.MaxValue, Convert.ToInt16(new JValue(short.MaxValue)));
+        Assert.Equal(Int16.MaxValue, Convert.ToInt16(new JValue(Int16.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToUInt16()
     {
-        Assert.Equal(ushort.MaxValue, Convert.ToUInt16(new JValue(ushort.MaxValue)));
+        Assert.Equal(UInt16.MaxValue, Convert.ToUInt16(new JValue(UInt16.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToUInt32()
     {
-        Assert.Equal(uint.MaxValue, Convert.ToUInt32(new JValue(uint.MaxValue)));
+        Assert.Equal(UInt32.MaxValue, Convert.ToUInt32(new JValue(UInt32.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToInt64()
     {
-        Assert.Equal(long.MaxValue, Convert.ToInt64(new JValue(long.MaxValue)));
+        Assert.Equal(Int64.MaxValue, Convert.ToInt64(new JValue(Int64.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToUInt64()
     {
-        Assert.Equal(ulong.MaxValue, Convert.ToUInt64(new JValue(ulong.MaxValue)));
+        Assert.Equal(UInt64.MaxValue, Convert.ToUInt64(new JValue(UInt64.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToSingle()
     {
-        Assert.Equal(float.MaxValue, Convert.ToSingle(new JValue(float.MaxValue)));
+        Assert.Equal(Single.MaxValue, Convert.ToSingle(new JValue(Single.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToDouble()
     {
-        Assert.Equal(double.MaxValue, Convert.ToDouble(new JValue(double.MaxValue)));
+        Assert.Equal(Double.MaxValue, Convert.ToDouble(new JValue(Double.MaxValue)));
     }
 
     [Fact]
     public void ConvertsToDecimal()
     {
-        Assert.Equal(decimal.MaxValue, Convert.ToDecimal(new JValue(decimal.MaxValue)));
+        Assert.Equal(Decimal.MaxValue, Convert.ToDecimal(new JValue(Decimal.MaxValue)));
     }
 
     [Fact]
@@ -546,7 +546,7 @@ public class JValueTests : TestFixtureBase
     [Fact]
     public void ConvertsToString_Decimal()
     {
-        Assert.Equal("79228162514264337593543950335", Convert.ToString(new JValue(decimal.MaxValue)));
+        Assert.Equal("79228162514264337593543950335", Convert.ToString(new JValue(Decimal.MaxValue)));
     }
 
     [Fact]
@@ -572,7 +572,7 @@ public class JValueTests : TestFixtureBase
     [Fact]
     public void ConvertsToType()
     {
-        Assert.Equal(int.MaxValue, Convert.ChangeType(new JValue(int.MaxValue), typeof(int), CultureInfo.InvariantCulture));
+        Assert.Equal(Int32.MaxValue, Convert.ChangeType(new JValue(Int32.MaxValue), typeof(Int32), CultureInfo.InvariantCulture));
     }
 
     [Fact]

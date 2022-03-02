@@ -2,6 +2,8 @@
 // Use of this source code is governed by The MIT License,
 // as found in the license.md file.
 
+using System.Text.RegularExpressions;
+
 public class RegexConverterTests : TestFixtureBase
 {
     public class RegexTestClass
