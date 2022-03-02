@@ -2040,11 +2040,6 @@ class JsonSerializerInternalReader : JsonSerializerInternalBase
                         {
                             TraceWriter.Trace(TraceLevel.Verbose, JsonPosition.FormatMessage(reader as IJsonLineInfo, reader.Path, $"Could not find member '{memberName}' on {contract.UnderlyingType}."), null);
                         }
-
-                        if ((contract.MissingMemberHandling ?? Serializer.MissingMemberHandling) == MissingMemberHandling.Error)
-                        {
-                            throw JsonSerializationException.Create(reader, $"Could not find member '{memberName}' on object of type '{type.Name}'");
-                        }
                     }
 
                     if (contract.ExtensionDataSetter != null)
@@ -2158,11 +2153,6 @@ class JsonSerializerInternalReader : JsonSerializerInternalBase
                             if (TraceWriter is {LevelFilter: >= TraceLevel.Verbose})
                             {
                                 TraceWriter.Trace(TraceLevel.Verbose, JsonPosition.FormatMessage(reader as IJsonLineInfo, reader.Path, $"Could not find member '{propertyName}' on {contract.UnderlyingType}"), null);
-                            }
-
-                            if ((contract.MissingMemberHandling ?? Serializer.MissingMemberHandling) == MissingMemberHandling.Error)
-                            {
-                                throw JsonSerializationException.Create(reader, $"Could not find member '{propertyName}' on object of type '{contract.UnderlyingType.Name}'");
                             }
 
                             if (!reader.Read())

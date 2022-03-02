@@ -865,9 +865,6 @@ public class JsonSerializerTest : TestFixtureBase
         serializer.MaxDepth = 9001;
         Assert.Equal(9001, serializer.MaxDepth);
 
-        serializer.MissingMemberHandling = MissingMemberHandling.Error;
-        Assert.Equal(MissingMemberHandling.Error, serializer.MissingMemberHandling);
-
         serializer.NullValueHandling = NullValueHandling.Ignore;
         Assert.Equal(NullValueHandling.Ignore, serializer.NullValueHandling);
 
@@ -957,9 +954,6 @@ public class JsonSerializerTest : TestFixtureBase
 
         settings.MaxDepth = 9001;
         Assert.Equal(9001, settings.MaxDepth);
-
-        settings.MissingMemberHandling = MissingMemberHandling.Error;
-        Assert.Equal(MissingMemberHandling.Error, settings.MissingMemberHandling);
 
         settings.NullValueHandling = NullValueHandling.Ignore;
         Assert.Equal(NullValueHandling.Ignore, settings.NullValueHandling);
@@ -1052,9 +1046,6 @@ public class JsonSerializerTest : TestFixtureBase
 
         serializerProxy.MaxDepth = 9001;
         Assert.Equal(9001, serializerProxy.MaxDepth);
-
-        serializerProxy.MissingMemberHandling = MissingMemberHandling.Error;
-        Assert.Equal(MissingMemberHandling.Error, serializerProxy.MissingMemberHandling);
 
         serializerProxy.NullValueHandling = NullValueHandling.Ignore;
         Assert.Equal(NullValueHandling.Ignore, serializerProxy.NullValueHandling);
@@ -3231,7 +3222,7 @@ Path '', line 1, position 1.");
     [Fact]
     public void SerializeGenericListOfStrings()
     {
-        var strings = new List<String>
+        var strings = new List<string>
         {
             "str_1",
             "str_2",
@@ -3895,21 +3886,6 @@ Path '', line 1, position 1.");
         var json = @"{""First"":""First"",""Second"":2,""Ignored"":{""Name"":""James""},""AdditionalContent"":{""LOL"":true}}";
 
         var cc = JsonConvert.DeserializeObject<ConstructorCompexIgnoredProperty>(json);
-        Assert.Equal("First", cc.First);
-        Assert.Equal(2, cc.Second);
-        Assert.Equal(null, cc.Ignored);
-    }
-
-    [Fact]
-    public void DeserializeIgnoredPropertyInConstructorWithoutThrowingMissingMemberError()
-    {
-        var json = @"{""First"":""First"",""Second"":2,""Ignored"":{""Name"":""James""}}";
-
-        var cc = JsonConvert.DeserializeObject<ConstructorCompexIgnoredProperty>(
-            json, new JsonSerializerSettings
-            {
-                MissingMemberHandling = MissingMemberHandling.Error
-            });
         Assert.Equal("First", cc.First);
         Assert.Equal(2, cc.Second);
         Assert.Equal(null, cc.Ignored);

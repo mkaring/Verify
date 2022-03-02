@@ -15,11 +15,6 @@ public class JsonObjectContract : JsonContainerContract
     public MemberSerialization MemberSerialization { get; set; }
 
     /// <summary>
-    /// Gets or sets the missing member handling used when deserializing this object.
-    /// </summary>
-    public MissingMemberHandling? MissingMemberHandling { get; set; }
-
-    /// <summary>
     /// Gets or sets a value that indicates whether the object's properties are required.
     /// </summary>
     public Required? ItemRequired { get; set; }

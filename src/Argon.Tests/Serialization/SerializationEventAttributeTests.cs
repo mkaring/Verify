@@ -255,28 +255,6 @@ public class SerializationEventAttributeTests : TestFixtureBase
 }", json);
     }
 
-    [Fact]
-    public void WhenSerializationErrorDetectedBySerializer_ThenCallbackIsCalled()
-    {
-        // Verify contract is properly finding our callback
-        var resolver = new DefaultContractResolver().ResolveContract(typeof(FooEvent));
-
-        Assert.Equal(resolver.OnErrorCallbacks.Count, 1);
-
-        var serializer = JsonSerializer.Create(new JsonSerializerSettings
-        {
-            // If I don't specify Error here, the callback isn't called
-            // either, but no exception is thrown.
-            MissingMemberHandling = MissingMemberHandling.Error,
-        });
-
-        // This throws with missing member exception, rather than calling my callback.
-        var foo = serializer.Deserialize<FooEvent>(new JsonTextReader(new StringReader("{ Id: 25 }")));
-
-        // When fixed, this would pass.
-        Assert.Equal(25, foo.Identifier);
-    }
-
     public class FooEvent
     {
         public int Identifier { get; set; }

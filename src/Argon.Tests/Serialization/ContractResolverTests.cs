@@ -4,7 +4,6 @@
 
 using System.ComponentModel;
 using TestObjects;
-using System.Text.RegularExpressions;
 
 public class DynamicContractResolver : DefaultContractResolver
 {

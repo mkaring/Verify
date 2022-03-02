@@ -74,12 +74,6 @@ public class JsonSerializer
     public virtual ReferenceLoopHandling? ReferenceLoopHandling { get; set; }
 
     /// <summary>
-    /// Gets or sets how missing members (e.g. JSON contains a property that isn't a member on the object) are handled during deserialization.
-    /// The default value is <see cref="Argon.MissingMemberHandling.Ignore" />.
-    /// </summary>
-    public virtual MissingMemberHandling? MissingMemberHandling { get; set; }
-
-    /// <summary>
     /// Gets or sets how null values are handled during serialization and deserialization.
     /// The default value is <see cref="Argon.NullValueHandling.Include" />.
     /// </summary>
@@ -353,10 +347,6 @@ public class JsonSerializer
         if (settings.ReferenceLoopHandling != null)
         {
             serializer.ReferenceLoopHandling = settings.ReferenceLoopHandling;
-        }
-        if (settings.MissingMemberHandling != null)
-        {
-            serializer.MissingMemberHandling = settings.MissingMemberHandling;
         }
         if (settings.ObjectCreationHandling != null)
         {
