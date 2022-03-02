@@ -2,7 +2,6 @@
 // Use of this source code is governed by The MIT License,
 // as found in the license.md file.
 
-using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using TestObjects;
 using System.Xml.Linq;
@@ -2577,10 +2576,6 @@ public class JsonSerializerCollectionsTests : TestFixtureBase
                 {
                     yield return item;
                 }
-            }
-            else
-            {
-                yield break;
             }
         }
 

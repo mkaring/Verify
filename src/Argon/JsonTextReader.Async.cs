@@ -895,7 +895,7 @@ public partial class JsonTextReader
         CharPos++;
 
         SetToken(JsonToken.PropertyName, propertyName);
-        base.quoteChar = quoteChar;
+        this.quoteChar = quoteChar;
         ClearRecentString();
 
         return true;

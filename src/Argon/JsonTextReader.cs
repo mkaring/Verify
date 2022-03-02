@@ -160,7 +160,7 @@ public partial class JsonTextReader : JsonReader, IJsonLineInfo
                     }
                     else
                     {
-                        dateParseHandling = base.DateParseHandling;
+                        dateParseHandling = DateParseHandling;
                     }
 
                     if (dateParseHandling == DateParseHandling.DateTime)
@@ -1531,7 +1531,7 @@ public partial class JsonTextReader : JsonReader, IJsonLineInfo
         CharPos++;
 
         SetToken(JsonToken.PropertyName, propertyName);
-        base.quoteChar = quoteChar;
+        this.quoteChar = quoteChar;
         ClearRecentString();
 
         return true;
