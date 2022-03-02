@@ -88,24 +88,6 @@ public class SerializationTests
     }
 
     [Fact]
-    public Task JTokenIgnore()
-    {
-        var jToken = JToken.Parse(@"{
-  Include: 1,
-  Ignore: 2,
-  ""Memory Info"": {
-          fragmentedBytes: 208,
-          heapSizeBytes: 2479536,
-          highMemoryLoadThresholdBytes: 30821986713,
-          memoryLoadBytes: 14041127280,
-          totalAvailableMemoryBytes: 34246651904
-        }
-}");
-        return Verify(jToken)
-            .ModifySerialization(_ => _.IgnoreMembers("Ignore", "Memory Info"));
-    }
-
-    [Fact]
     public Task JObjectIgnore()
     {
         var obj = new JObject(
@@ -1856,90 +1838,8 @@ public class SerializationTests
 
 #endregion
 
-    [Fact]
-    public Task IgnoreJTokenByName()
-    {
-        var json = @"{
-  'short': {
-    'key': {
-      'code': 0,
-      'msg': 'No action taken'
-    },
-    'Ignore1': {
-      'code': 2,
-      'msg': 'ignore this'
-    }
-  }
-}";
-        var target = JToken.Parse(json);
-        return Verify(target)
-            .ModifySerialization(_ => _.IgnoreMember("Ignore1"));
-    }
-
-    [Fact]
-    public Task VerifyJsonGuid()
-    {
-        var json = "{'key': 'c572ff75-e1a2-49bd-99b9-4550697946c3'}";
-        return VerifyJson(json);
-    }
-
-    [Fact]
-    public Task VerifyJsonDateTime()
-    {
-        var json = $"{{'key': '{DateTime.Now:yyyy-MM-ddTHH:mm:ss}'}}";
-        return VerifyJson(json);
-    }
-
-    [Fact]
-    public Task VerifyJsonWithArray()
-    {
-        var json = @"{
-    commitments: [
-      {
-        id: '9585dadf-551a-43eb-960c-18b935993cc3',
-        title: 'Commitment1'
-      }
-    ]
-    }";
-        return VerifyJson(json);
-    }
-
-    [Fact]
-    public Task VerifyJsonWithArrayAtRoot()
-    {
-        var json = @"[
-      {
-        id: '9585dadf-551a-43eb-960c-18b935993cc3',
-        title: 'Commitment1'
-      }
-    ]";
-        return VerifyJson(json);
-    }
-
 #region VerifyJson
 
-    [Fact]
-    public Task VerifyJsonString()
-    {
-        var json = "{'key': {'msg': 'No action taken'}}";
-        return VerifyJson(json);
-    }
-
-    [Fact]
-    public Task VerifyJsonStream()
-    {
-        var json = "{'key': {'msg': 'No action taken'}}";
-        var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-        return VerifyJson(stream);
-    }
-
-    [Fact]
-    public Task VerifyJsonJToken()
-    {
-        var json = "{'key': {'msg': 'No action taken'}}";
-        var target = JToken.Parse(json);
-        return VerifyJson(target);
-    }
 
 #endregion
 

@@ -150,7 +150,6 @@ public class JsonSerializerSettings
 
     const int DefaultMaxDepth = 64;
     /// <summary>
-    /// Gets or sets the maximum depth allowed when reading JSON. Reading past this depth will throw a <see cref="JsonReaderException"/>.
     /// A null value means there is no maximum.
     /// The default value is <c>64</c>.
     /// </summary>

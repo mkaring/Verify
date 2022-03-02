@@ -147,47 +147,6 @@ public class TypeNameHandlingTests : TestFixtureBase
     }
 
     [Fact]
-    public void DeserializeByteArrayWithTypeName_BadAdditionalContent()
-    {
-        var json = @"{
-  ""$type"": ""TestObjects.HasByteArray, Argon.Tests"",
-  ""EncryptedPassword"": {
-    ""$type"": ""System.Byte[], mscorlib"",
-    ""$value"": ""cGFzc3dvcmQ="",
-    ""$value"": ""cGFzc3dvcmQ=""
-  }
-}";
-
-        XUnitAssert.Throws<JsonReaderException>(() =>
-        {
-            JsonConvert.DeserializeObject<HasByteArray>(json, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Objects
-            });
-        }, "Error reading bytes. Unexpected token: PropertyName. Path 'EncryptedPassword.$value', line 6, position 13.");
-    }
-
-    [Fact]
-    public void DeserializeByteArrayWithTypeName_ExtraProperty()
-    {
-        var json = @"{
-  ""$type"": ""TestObjects.HasByteArray, Argon.Tests"",
-  ""EncryptedPassword"": {
-    ""$type"": ""System.Byte[], mscorlib"",
-    ""$value"": ""cGFzc3dvcmQ=""
-  },
-  ""Pie"": null
-}";
-        var value = JsonConvert.DeserializeObject<HasByteArray>(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Objects
-        });
-
-        Assert.NotNull(value.EncryptedPassword);
-        Assert.Equal(Convert.FromBase64String("cGFzc3dvcmQ="), value.EncryptedPassword);
-    }
-
-    [Fact]
     public void SerializeValueTupleWithTypeName()
     {
         var tupleRef = typeof(ValueTuple<int, int, string>).GetTypeName(TypeNameAssemblyFormatHandling.Simple, null);
@@ -205,15 +164,6 @@ public class TypeNameHandlingTests : TestFixtureBase
   ""Item2"": 2,
   ""Item3"": ""string""
 }}", json);
-
-        var t2 = (ValueTuple<int, int, string>) JsonConvert.DeserializeObject(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All
-        });
-
-        Assert.Equal(1, t2.Item1);
-        Assert.Equal(2, t2.Item2);
-        Assert.Equal("string", t2.Item3);
     }
 
     public class KnownAutoTypes
@@ -333,26 +283,6 @@ public class TypeNameHandlingTests : TestFixtureBase
     }
 
     [Fact]
-    public void NestedValueObjects()
-    {
-        var stringBuilder = new StringBuilder();
-        for (var i = 0; i < 3; i++)
-        {
-            stringBuilder.Append(@"{""$value"":");
-        }
-
-        XUnitAssert.Throws<JsonSerializationException>(() =>
-        {
-            var reader = new JsonTextReader(new StringReader(stringBuilder.ToString()));
-            var serializer = new JsonSerializer
-            {
-                MetadataPropertyHandling = MetadataPropertyHandling.Default
-            };
-            serializer.Deserialize<sbyte>(reader);
-        }, "Unexpected token when deserializing primitive value: StartObject. Path '$value', line 1, position 11.");
-    }
-
-    [Fact]
     public void SerializeRootTypeNameIfDerivedWithAuto()
     {
         var serializer = new JsonSerializer
@@ -372,10 +302,6 @@ public class TypeNameHandlingTests : TestFixtureBase
 }", result);
 
         Assert.True(result.Contains("WagePerson"));
-        using var rd = new JsonTextReader(new StringReader(result));
-        var person = serializer.Deserialize<Person>(rd);
-
-        Assert.IsType(typeof(WagePerson), person);
     }
 
     [Fact]
@@ -1139,30 +1065,6 @@ public class TypeNameHandlingTests : TestFixtureBase
 }}";
 
         XUnitAssert.AreEqualNormalized(expected, json);
-
-        var sr = new StringReader(json);
-
-        var deserializingTester = new JsonSerializer();
-
-        HolderClass anotherTestObject;
-
-        using (var jsonReader = new JsonTextReader(sr))
-        {
-            deserializingTester.TypeNameHandling = TypeNameHandling.Auto;
-
-            anotherTestObject = deserializingTester.Deserialize<HolderClass>(jsonReader);
-        }
-
-        Assert.NotNull(anotherTestObject);
-        Assert.IsType(typeof(ContentSubClass), anotherTestObject.TestMember);
-        Assert.IsType(typeof(Dictionary<int, IList<ContentBaseClass>>), anotherTestObject.AnotherTestMember);
-        Assert.Equal(1, anotherTestObject.AnotherTestMember.Count);
-
-        var list = anotherTestObject.AnotherTestMember[1];
-
-        Assert.IsType(typeof(List<ContentBaseClass>), list);
-        Assert.Equal(1, list.Count);
-        Assert.IsType(typeof(ContentSubClass), list[0]);
     }
 
     [Fact]

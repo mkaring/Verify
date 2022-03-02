@@ -41,60 +41,6 @@ public class KeyValuePairConverter : JsonConverter
     }
 
     /// <summary>
-    /// Reads the JSON representation of the object.
-    /// </summary>
-    public override object? ReadJson(JsonReader reader, Type type, object? existingValue, JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            if (!type.IsNullableType())
-            {
-                throw JsonSerializationException.Create(reader, "Cannot convert null value to KeyValuePair.");
-            }
-
-            return null;
-        }
-
-        object? key = null;
-        object? value = null;
-
-        reader.ReadAndAssert();
-
-        var t = type.IsNullableType()
-            ? Nullable.GetUnderlyingType(type)!
-            : type;
-
-        var reflectionObject = reflectionObjectPerType.Get(t);
-        var keyContract = serializer.ResolveContract(reflectionObject.GetType(keyName));
-        var valueContract = serializer.ResolveContract(reflectionObject.GetType(valueName));
-
-        while (reader.TokenType == JsonToken.PropertyName)
-        {
-            var propertyName = reader.Value!.ToString();
-            if (string.Equals(propertyName, keyName, StringComparison.OrdinalIgnoreCase))
-            {
-                reader.ReadForTypeAndAssert(keyContract, false);
-
-                key = serializer.Deserialize(reader, keyContract.UnderlyingType);
-            }
-            else if (string.Equals(propertyName, valueName, StringComparison.OrdinalIgnoreCase))
-            {
-                reader.ReadForTypeAndAssert(valueContract, false);
-
-                value = serializer.Deserialize(reader, valueContract.UnderlyingType);
-            }
-            else
-            {
-                reader.Skip();
-            }
-
-            reader.ReadAndAssert();
-        }
-
-        return reflectionObject.Creator!(key, value);
-    }
-
-    /// <summary>
     /// Determines whether this instance can convert the specified object type.
     /// </summary>
     /// <returns>

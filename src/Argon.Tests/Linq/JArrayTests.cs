@@ -331,16 +331,6 @@ Parameter name: index",
         Assert.Equal(1, j.IndexOf(v4));
     }
 
-    [Fact]
-    public void Parse_ShouldThrowOnUnexpectedToken()
-    {
-        var json = @"{""prop"":""value""}";
-
-        XUnitAssert.Throws<JsonReaderException>(
-            () => JArray.Parse(json),
-            "Error reading JArray from JsonReader. Current JsonReader item is not an array: StartObject. Path '', line 1, position 1.");
-    }
-
     public class ListItemFields
     {
         public string ListItemText { get; set; }
@@ -463,14 +453,6 @@ Parameter name: index",
     }
 
     [Fact]
-    public void ParseIncomplete()
-    {
-        XUnitAssert.Throws<JsonReaderException>(
-            () => JArray.Parse("[1"),
-            "Unexpected end of content while loading JArray. Path '[0]', line 1, position 2.");
-    }
-
-    [Fact]
     public void InsertAddEnd()
     {
         var array = new JArray();
@@ -480,128 +462,5 @@ Parameter name: index",
         Assert.Equal(2, array.Count);
         Assert.Equal(123, (int)array[0]);
         Assert.Equal(456, (int)array[1]);
-    }
-
-    [Fact]
-    public void ParseAdditionalContent()
-    {
-        var json = @"[
-""Small"",
-""Medium"",
-""Large""
-], 987987";
-
-        XUnitAssert.Throws<JsonReaderException>(
-            () => JArray.Parse(json),
-            "Additional text encountered after finished reading JSON content: ,. Path '', line 5, position 1.");
-    }
-
-    [Fact]
-    public void ToListOnEmptyArray()
-    {
-        var json = @"{""decks"":[]}";
-
-        var decks = (JArray)JObject.Parse(json)["decks"];
-        var l = decks.ToList();
-        Assert.Equal(0, l.Count);
-
-        json = @"{""decks"":[1]}";
-
-        decks = (JArray)JObject.Parse(json)["decks"];
-        l = decks.ToList();
-        Assert.Equal(1, l.Count);
-    }
-
-    [Fact]
-    public void Parse_NoComments()
-    {
-        var json = "[1,2/*comment*/,3]";
-
-        var a = JArray.Parse(json, new JsonLoadSettings());
-
-        Assert.Equal(3, a.Count);
-        Assert.Equal(1, (int)a[0]);
-        Assert.Equal(2, (int)a[1]);
-        Assert.Equal(3, (int)a[2]);
-
-        a = JArray.Parse(json, new JsonLoadSettings
-        {
-            CommentHandling = CommentHandling.Ignore
-        });
-
-        Assert.Equal(3, a.Count);
-        Assert.Equal(1, (int)a[0]);
-        Assert.Equal(2, (int)a[1]);
-        Assert.Equal(3, (int)a[2]);
-
-        a = JArray.Parse(json, new JsonLoadSettings
-        {
-            CommentHandling = CommentHandling.Load
-        });
-
-        Assert.Equal(4, a.Count);
-        Assert.Equal(1, (int)a[0]);
-        Assert.Equal(2, (int)a[1]);
-        Assert.Equal(JTokenType.Comment, a[2].Type);
-        Assert.Equal(3, (int)a[3]);
-    }
-
-    [Fact]
-    public void Parse_ExcessiveContentJustComments()
-    {
-        var json = @"[1,2,3]/*comment*/
-//Another comment.";
-
-        var a = JArray.Parse(json);
-
-        Assert.Equal(3, a.Count);
-        Assert.Equal(1, (int)a[0]);
-        Assert.Equal(2, (int)a[1]);
-        Assert.Equal(3, (int)a[2]);
-    }
-
-    [Fact]
-    public void Parse_ExcessiveContent()
-    {
-        var json = @"[1,2,3]/*comment*/
-//Another comment.
-[]";
-
-        XUnitAssert.Throws<JsonReaderException>(
-            () => JArray.Parse(json),
-            "Additional text encountered after finished reading JSON content: [. Path '', line 3, position 0.");
-    }
-
-    [Fact]
-    public void Parse_LineInfo()
-    {
-        var json = "[1,2,3]";
-
-        var a = JArray.Parse(json, new JsonLoadSettings());
-
-        XUnitAssert.True(((IJsonLineInfo)a).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[0]).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[1]).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[2]).HasLineInfo());
-
-        a = JArray.Parse(json, new JsonLoadSettings
-        {
-            LineInfoHandling = LineInfoHandling.Ignore
-        });
-
-        XUnitAssert.False(((IJsonLineInfo)a).HasLineInfo());
-        XUnitAssert.False(((IJsonLineInfo)a[0]).HasLineInfo());
-        XUnitAssert.False(((IJsonLineInfo)a[1]).HasLineInfo());
-        XUnitAssert.False(((IJsonLineInfo)a[2]).HasLineInfo());
-
-        a = JArray.Parse(json, new JsonLoadSettings
-        {
-            LineInfoHandling = LineInfoHandling.Load
-        });
-
-        XUnitAssert.True(((IJsonLineInfo)a).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[0]).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[1]).HasLineInfo());
-        XUnitAssert.True(((IJsonLineInfo)a[2]).HasLineInfo());
     }
 }

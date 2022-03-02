@@ -16,13 +16,4 @@ public class WidgetIdJsonConverter : JsonConverter
         var id = (WidgetId1)value;
         writer.WriteValue(id.Value.ToString());
     }
-
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
-        }
-        return new WidgetId1 { Value = int.Parse(reader.Value.ToString()) };
-    }
 }

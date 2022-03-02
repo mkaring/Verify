@@ -242,12 +242,6 @@ public class DefaultContractResolver : IContractResolver
             }
         }
 
-        var extensionDataMember = GetExtensionDataMemberForType(contract.NonNullableUnderlyingType);
-        if (extensionDataMember != null)
-        {
-            SetExtensionDataDelegates(contract, extensionDataMember);
-        }
-
         // serializing DirectoryInfo without ISerializable will stackoverflow
         // https://github.com/JamesNK/Newtonsoft.Json/issues/1541
         if (Array.IndexOf(BlacklistedTypeNames, type.FullName) != -1)
@@ -261,151 +255,6 @@ public class DefaultContractResolver : IContractResolver
     static void ThrowUnableToSerializeError(object o, StreamingContext context)
     {
         throw new JsonSerializationException($"Unable to serialize instance of '{o.GetType()}'.");
-    }
-
-    static MemberInfo GetExtensionDataMemberForType(Type type)
-    {
-        var members = GetClassHierarchyForType(type).SelectMany(baseType =>
-        {
-            var m = new List<MemberInfo>();
-            m.AddRange(baseType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-            m.AddRange(baseType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-
-            return m;
-        });
-
-        var extensionDataMember = members.LastOrDefault(m =>
-        {
-            var memberType = m.MemberType;
-            if (memberType != MemberTypes.Property && memberType != MemberTypes.Field)
-            {
-                return false;
-            }
-
-            // last instance of attribute wins on type if there are multiple
-            if (!m.IsDefined(typeof(JsonExtensionDataAttribute), false))
-            {
-                return false;
-            }
-
-            if (!m.CanReadMemberValue(true))
-            {
-                throw new JsonException($"Invalid extension data attribute on '{GetClrTypeFullName(m.DeclaringType!)}'. Member '{m.Name}' must have a getter.");
-            }
-
-            var t = m.GetMemberUnderlyingType();
-
-            if (t.ImplementsGenericDefinition(typeof(IDictionary<,>), out var dictionaryType))
-            {
-                var keyType = dictionaryType.GetGenericArguments()[0];
-                var valueType = dictionaryType.GetGenericArguments()[1];
-
-                if (keyType.IsAssignableFrom(typeof(string)) && valueType.IsAssignableFrom(typeof(JToken)))
-                {
-                    return true;
-                }
-            }
-
-            throw new JsonException($"Invalid extension data attribute on '{GetClrTypeFullName(m.DeclaringType!)}'. Member '{m.Name}' type must implement IDictionary<string, JToken>.");
-        });
-
-        return extensionDataMember!;
-    }
-
-    static void SetExtensionDataDelegates(JsonObjectContract contract, MemberInfo member)
-    {
-        var extensionDataAttribute = member.GetCustomAttribute<JsonExtensionDataAttribute>(true);
-        if (extensionDataAttribute == null)
-        {
-            return;
-        }
-
-        var type = member.GetMemberUnderlyingType();
-
-        if (!type.ImplementsGenericDefinition(typeof(IDictionary<,>), out var dictionaryType))
-        {
-            throw new JsonSerializationException($"Cannot use '{member.Name}' for extension data. It must be a IDictionary<,>.");
-        }
-
-        var keyType = dictionaryType.GetGenericArguments()[0];
-        var valueType = dictionaryType.GetGenericArguments()[1];
-
-        Type createdType;
-
-        // change type to a class if it is the base interface so it can be instantiated if needed
-        if (ReflectionUtils.IsGenericDefinition(type, typeof(IDictionary<,>)))
-        {
-            createdType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
-        }
-        else
-        {
-            createdType = type;
-        }
-
-        var getExtensionDataDictionary = JsonTypeReflector.ReflectionDelegateFactory.CreateGet<object>(member);
-
-        if (extensionDataAttribute.ReadData)
-        {
-            var setExtensionDataDictionary = BuildSetExtensionDataDictionary(member);
-            var createExtensionDataDictionary = JsonTypeReflector.ReflectionDelegateFactory.CreateDefaultConstructor<object>(createdType);
-            var setMethod = type.GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, valueType, new[] { keyType }, null)?.SetMethod;
-            if (setMethod == null)
-            {
-                // Item is explicitly implemented and non-public
-                // get from dictionary interface
-                setMethod = dictionaryType.GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, valueType, new[] { keyType }, null)?.SetMethod;
-            }
-
-            var setExtensionDataDictionaryValue = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(setMethod!);
-
-            ExtensionDataSetter extensionDataSetter = (o, key, value) =>
-            {
-                var dictionary = getExtensionDataDictionary(o);
-                if (dictionary == null)
-                {
-                    if (setExtensionDataDictionary == null)
-                    {
-                        throw new JsonSerializationException($"Cannot set value onto extension data member '{member.Name}'. The extension data collection is null and it cannot be set.");
-                    }
-
-                    dictionary = createExtensionDataDictionary();
-                    setExtensionDataDictionary(o, dictionary);
-                }
-
-                setExtensionDataDictionaryValue(dictionary, key, value);
-            };
-
-            contract.ExtensionDataSetter = extensionDataSetter;
-        }
-
-        if (extensionDataAttribute.WriteData)
-        {
-            var enumerableWrapper = typeof(EnumerableDictionaryWrapper<,>).MakeGenericType(keyType, valueType);
-            var constructors = enumerableWrapper.GetConstructors().First();
-            var createEnumerableWrapper = JsonTypeReflector.ReflectionDelegateFactory.CreateParameterizedConstructor(constructors);
-
-            ExtensionDataGetter extensionDataGetter = o =>
-            {
-                var dictionary = getExtensionDataDictionary(o);
-                if (dictionary == null)
-                {
-                    return null;
-                }
-
-                return (IEnumerable<KeyValuePair<object, object>>)createEnumerableWrapper(dictionary);
-            };
-
-            contract.ExtensionDataGetter = extensionDataGetter;
-        }
-
-        contract.ExtensionDataValueType = valueType;
-    }
-
-    private static Action<object, object?>? BuildSetExtensionDataDictionary(MemberInfo member)
-    {
-        if (member.CanSetMemberValue(true, false))
-            return JsonTypeReflector.ReflectionDelegateFactory.CreateSet<object>(member);
-        return null;
     }
 
     // leave as class instead of struct
@@ -1316,9 +1165,7 @@ public class DefaultContractResolver : IContractResolver
         property.HasMemberAttribute = hasMemberAttribute;
 
         var hasJsonIgnoreAttribute =
-                JsonTypeReflector.GetAttribute<JsonIgnoreAttribute>(attributeProvider) != null
-                // automatically ignore extension data dictionary property if it is public
-                || JsonTypeReflector.GetAttribute<JsonExtensionDataAttribute>(attributeProvider) != null;
+                JsonTypeReflector.GetAttribute<JsonIgnoreAttribute>(attributeProvider) != null;
 
         if (memberSerialization != MemberSerialization.OptIn)
         {

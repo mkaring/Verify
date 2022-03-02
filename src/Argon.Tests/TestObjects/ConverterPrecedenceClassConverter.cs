@@ -17,20 +17,6 @@ public abstract class ConverterPrecedenceClassConverter : JsonConverter
         j.WriteTo(writer);
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        JToken j = JArray.Load(reader);
-
-        var converter = (string)j[0];
-        if (converter != ConverterType)
-        {
-            throw new($"Serialize converter {converter} and deserialize converter {ConverterType} do not match.");
-        }
-
-        var testValue = (string)j[1];
-        return new ConverterPrecedenceClass(testValue);
-    }
-
     public override bool CanConvert(Type type)
     {
         return type == typeof(ConverterPrecedenceClass);

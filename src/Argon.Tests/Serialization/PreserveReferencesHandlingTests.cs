@@ -31,11 +31,6 @@ public class PreserveReferencesHandlingTests : TestFixtureBase
             return true;
         }
 
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            return new ContentA { B = serializer.Deserialize<ContentB>(reader) }; // Construct my data back.
-        }
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var b = ((ContentA)value).B;
@@ -468,21 +463,6 @@ public class PreserveReferencesHandlingTests : TestFixtureBase
             me["Child"] = o;
 
             me.WriteTo(writer);
-        }
-
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            var o = JObject.Load(reader);
-            var id = (string)o["$id"];
-            if (id == null)
-            {
-                var reference = (string) o["$ref"];
-                return serializer.ReferenceResolver.ResolveReference(serializer, reference);
-            }
-
-            var circularReferenceClass = new CircularReferenceClass();
-            serializer.Populate(o.CreateReader(), circularReferenceClass);
-            return circularReferenceClass;
         }
 
         public override bool CanConvert(Type type)
@@ -1027,62 +1007,6 @@ public class PreserveReferencesHandlingTests : TestFixtureBase
 
         var deserializedUser = JsonConvert.DeserializeObject<User>(json, settings);
         Assert.NotNull(deserializedUser);
-    }
-
-    [Fact]
-    public void PreserveReferencesHandlingWithReusedJsonSerializer()
-    {
-        var c = new MyClass();
-
-        var myClasses1 = new List<MyClass>
-        {
-            c,
-            c
-        };
-
-        var serializer = new JsonSerializer
-        {
-            PreserveReferencesHandling = PreserveReferencesHandling.All
-        };
-
-        var memoryStream = new MemoryStream();
-
-        using (var streamWriter = new StreamWriter(memoryStream))
-        using (var jsonWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented })
-        {
-            serializer.Serialize(jsonWriter, myClasses1);
-        }
-
-        var data = memoryStream.ToArray();
-        var json = Encoding.UTF8.GetString(data, 0, data.Length);
-
-        XUnitAssert.AreEqualNormalized(@"{
-  ""$id"": ""1"",
-  ""$values"": [
-    {
-      ""$id"": ""2"",
-      ""PreProperty"": 0,
-      ""PostProperty"": 0
-    },
-    {
-      ""$ref"": ""2""
-    }
-  ]
-}", json);
-
-        memoryStream = new MemoryStream(data);
-        IList<MyClass> myClasses2;
-
-        using (var sr = new StreamReader(memoryStream))
-        using (var reader = new JsonTextReader(sr))
-        {
-            myClasses2 = serializer.Deserialize<IList<MyClass>>(reader);
-        }
-
-        Assert.Equal(2, myClasses2.Count);
-        Assert.Equal(myClasses2[0], myClasses2[1]);
-
-        Assert.NotEqual(myClasses1[0], myClasses2[0]);
     }
 
     [Fact]

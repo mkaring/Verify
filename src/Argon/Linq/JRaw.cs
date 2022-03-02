@@ -26,20 +26,6 @@ public partial class JRaw : JValue
     {
     }
 
-    /// <summary>
-    /// Creates an instance of <see cref="JRaw"/> with the content of the reader's current token.
-    /// </summary>
-    /// <param name="reader">The reader.</param>
-    /// <returns>An instance of <see cref="JRaw"/> with the content of the reader's current token.</returns>
-    public static JRaw Create(JsonReader reader)
-    {
-        using var stringWriter = new StringWriter(CultureInfo.InvariantCulture);
-        using var jsonWriter = new JsonTextWriter(stringWriter);
-        jsonWriter.WriteToken(reader);
-
-        return new JRaw(stringWriter.ToString());
-    }
-
     internal override JToken CloneToken()
     {
         return new JRaw(this);

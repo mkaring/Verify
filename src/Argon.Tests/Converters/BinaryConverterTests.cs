@@ -112,48 +112,4 @@ public class BinaryConverterTests : TestFixtureBase
   ""NullableSqlBinary2"": null
 }", json);
     }
-
-    [Fact]
-    public void DeserializeSqlBinaryClass()
-    {
-        var json = @"{
-  ""SqlBinary"": ""VGhpcyBpcyBzb21lIHRlc3QgZGF0YSEhIQ=="",
-  ""NullableSqlBinary1"": ""VGhpcyBpcyBzb21lIHRlc3QgZGF0YSEhIQ=="",
-  ""NullableSqlBinary2"": null
-}";
-
-        var sqlBinaryClass = JsonConvert.DeserializeObject<SqlBinaryClass>(json, new BinaryConverter());
-
-        Assert.Equal(new SqlBinary(TestData), sqlBinaryClass.SqlBinary);
-        Assert.Equal(new SqlBinary(TestData), sqlBinaryClass.NullableSqlBinary1);
-        Assert.Equal(null, sqlBinaryClass.NullableSqlBinary2);
-    }
-
-    [Fact]
-    public void DeserializeByteArrayClass()
-    {
-        var json = @"{
-  ""ByteArray"": ""VGhpcyBpcyBzb21lIHRlc3QgZGF0YSEhIQ=="",
-  ""NullByteArray"": null
-}";
-
-        var byteArrayClass = JsonConvert.DeserializeObject<ByteArrayClass>(json);
-
-        Assert.Equal(TestData, byteArrayClass.ByteArray);
-        Assert.Equal(null, byteArrayClass.NullByteArray);
-    }
-
-    [Fact]
-    public void DeserializeByteArrayFromJsonArray()
-    {
-        var json = @"{
-  ""ByteArray"": [0, 1, 2, 3],
-  ""NullByteArray"": null
-}";
-
-        var c = JsonConvert.DeserializeObject<ByteArrayClass>(json);
-        Assert.NotNull(c.ByteArray);
-        Assert.Equal(4, c.ByteArray.Length);
-        Assert.Equal(new byte[] { 0, 1, 2, 3 }, c.ByteArray);
-    }
 }

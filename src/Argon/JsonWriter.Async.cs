@@ -471,23 +471,6 @@ public abstract partial class JsonWriter
     }
 
     /// <summary>
-    /// Asynchronously writes the current <see cref="JsonReader"/> token.
-    /// </summary>
-    public Task WriteTokenAsync(JsonReader reader, CancellationToken cancellation = default)
-    {
-        return WriteTokenAsync(reader, true, cancellation);
-    }
-
-    /// <summary>
-    /// Asynchronously writes the current <see cref="JsonReader"/> token.
-    /// </summary>
-    /// <param name="writeChildren">A flag indicating whether the current token's children should be written.</param>
-    public Task WriteTokenAsync(JsonReader reader, bool writeChildren, CancellationToken cancellation = default)
-    {
-        return WriteTokenAsync(reader, writeChildren, true, true, cancellation);
-    }
-
-    /// <summary>
     /// Asynchronously writes the <see cref="JsonToken"/> token and its value.
     /// </summary>
     public Task WriteTokenAsync(JsonToken token, CancellationToken cancellation = default)
@@ -573,49 +556,6 @@ public abstract partial class JsonWriter
                 return WriteValueAsync((byte[]?)value, cancellation);
             default:
                 throw MiscellaneousUtils.CreateArgumentOutOfRangeException(nameof(token), token, "Unexpected token type.");
-        }
-    }
-
-    internal virtual async Task WriteTokenAsync(JsonReader reader, bool writeChildren, bool writeDateConstructorAsDate, bool writeComments, CancellationToken cancellation)
-    {
-        var initialDepth = CalculateWriteTokenInitialDepth(reader);
-
-        do
-        {
-            if (writeComments || reader.TokenType != JsonToken.Comment)
-            {
-                await WriteTokenAsync(reader.TokenType, reader.Value, cancellation).ConfigureAwait(false);
-            }
-        } while (
-            // stop if we have reached the end of the token being read
-            initialDepth - 1 < reader.Depth - (JsonTokenUtils.IsEndToken(reader.TokenType) ? 1 : 0)
-            && writeChildren
-            && await reader.ReadAsync(cancellation).ConfigureAwait(false));
-
-        if (IsWriteTokenIncomplete(reader, writeChildren, initialDepth))
-        {
-            throw JsonWriterException.Create(this, "Unexpected end when reading token.");
-        }
-    }
-
-    // For internal use, when we know the writer does not offer true async support (e.g. when backed
-    // by a StringWriter) and therefore async write methods are always in practice just a less efficient
-    // path through the sync version.
-    internal async Task WriteTokenSyncReadingAsync(JsonReader reader, CancellationToken cancellation)
-    {
-        var initialDepth = CalculateWriteTokenInitialDepth(reader);
-
-        do
-        {
-            WriteToken(reader.TokenType, reader.Value);
-        } while (
-            // stop if we have reached the end of the token being read
-            initialDepth - 1 < reader.Depth - (JsonTokenUtils.IsEndToken(reader.TokenType) ? 1 : 0)
-            && await reader.ReadAsync(cancellation).ConfigureAwait(false));
-
-        if (initialDepth < CalculateWriteTokenFinalDepth(reader))
-        {
-            throw JsonWriterException.Create(this, "Unexpected end when reading token.");
         }
     }
 

@@ -1061,11 +1061,6 @@ public class JsonConvertTest : TestFixtureBase
             writer.WriteValue($"{ClobberValueString}-{ClobberValueInt}-{value}");
         }
 
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool CanConvert(Type type)
         {
             return type == typeof(string);
@@ -1160,11 +1155,6 @@ public class JsonConvertTest : TestFixtureBase
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteValue(type);
-        }
-
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
         }
 
         public override bool CanConvert(Type type)
@@ -1441,16 +1431,9 @@ public class JsonConvertTest : TestFixtureBase
             this.rounding = rounding;
         }
 
-        public override bool CanRead => false;
-
         public override bool CanConvert(Type type)
         {
             return type == typeof(double);
-        }
-
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -1478,41 +1461,6 @@ public class JsonConvertTest : TestFixtureBase
 
     public class NonGenericChildClass : GenericIntermediateClass<int>
     {
-    }
-
-    [Fact]
-    public void ShouldNotPopulateReadOnlyEnumerableObjectWithNonDefaultConstructor()
-    {
-        object actual = JsonConvert.DeserializeObject<HasReadOnlyEnumerableObject>("{\"foo\":{}}");
-        Assert.NotNull(actual);
-    }
-
-    [Fact]
-    public void ShouldNotPopulateReadOnlyEnumerableObjectWithDefaultConstructor()
-    {
-        object actual = JsonConvert.DeserializeObject<HasReadOnlyEnumerableObjectAndDefaultConstructor>("{\"foo\":{}}");
-        Assert.NotNull(actual);
-    }
-
-    [Fact]
-    public void ShouldNotPopulateContructorArgumentEnumerableObject()
-    {
-        object actual = JsonConvert.DeserializeObject<AcceptsEnumerableObjectToConstructor>("{\"foo\":{}}");
-        Assert.NotNull(actual);
-    }
-
-    [Fact]
-    public void ShouldNotPopulateEnumerableObjectProperty()
-    {
-        object actual = JsonConvert.DeserializeObject<HasEnumerableObject>("{\"foo\":{}}");
-        Assert.NotNull(actual);
-    }
-
-    [Fact]
-    public void ShouldNotPopulateReadOnlyDictionaryObjectWithNonDefaultConstructor()
-    {
-        object actual = JsonConvert.DeserializeObject<HasReadOnlyDictionary>("{\"foo\":{'key':'value'}}");
-        Assert.NotNull(actual);
     }
 
     public sealed class HasReadOnlyDictionary
@@ -1582,13 +1530,6 @@ public class JsonConvertTest : TestFixtureBase
             public override bool CanConvert(Type type)
                 => type == typeof(Foo);
 
-            public override object ReadJson
-                (JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-            {
-                reader.Skip();
-                return new EnumerableWithConverter();
-            }
-
             public override void WriteJson
                 (JsonWriter writer, object value, JsonSerializer serializer)
             {
@@ -1605,18 +1546,6 @@ public class JsonConvertTest : TestFixtureBase
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    [Fact]
-    public void ShouldNotRequireIgnoredPropertiesWithItemsRequired()
-    {
-        var json = @"{
-  ""exp"": 1483228800,
-  ""active"": true
-}";
-        var value = JsonConvert.DeserializeObject<ItemsRequiredObjectWithIgnoredProperty>(json);
-        Assert.NotNull(value);
-        Assert.Equal(value.Expiration, new DateTime(2017, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-        Assert.Equal(value.Active, true);
-    }
 
     [JsonObject(ItemRequired = Required.Always)]
     public sealed class ItemsRequiredObjectWithIgnoredProperty

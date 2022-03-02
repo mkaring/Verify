@@ -11,17 +11,6 @@ public class EncodingReadConverter : JsonConverter
         return typeof(Encoding).IsAssignableFrom(type);
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        var encodingName = serializer.Deserialize<string>(reader);
-        if (encodingName == null)
-        {
-            return null;
-        }
-
-        return Encoding.GetEncoding(encodingName);
-    }
-
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         throw new NotImplementedException();

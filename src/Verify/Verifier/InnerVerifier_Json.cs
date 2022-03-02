@@ -2,38 +2,6 @@
 {
     static IEnumerable<Target> emptyTargets = Enumerable.Empty<Target>();
 
-    public Task VerifyJson(string? target)
-    {
-        if (target is null)
-        {
-            AssertExtensionIsNull();
-            return VerifyInner("null", null, emptyTargets);
-        }
-
-        return VerifyJson(JToken.Parse(target));
-    }
-
-    public async Task VerifyJson(Stream? target)
-    {
-        if (target is null)
-        {
-            AssertExtensionIsNull();
-            await VerifyInner("null", null, emptyTargets);
-            return;
-        }
-
-        using var reader = new StreamReader(target);
-        using var textReader = new JsonTextReader(reader);
-        var json = await JToken.LoadAsync(textReader);
-        await VerifyJson(json);
-    }
-
-    public Task VerifyJson(JToken? target)
-    {
-        AssertExtensionIsNull();
-        return VerifyInner(target, null, emptyTargets);
-    }
-
     public async Task Verify<T>(T target)
     {
         if (target is null)

@@ -20,16 +20,6 @@ public class NameContainerConverter : JsonConverter
         }
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        var nameContainer = new NameContainer
-        {
-            Value = (string)reader.Value
-        };
-
-        return nameContainer;
-    }
-
     public override bool CanConvert(Type type)
     {
         return type == typeof(NameContainer);

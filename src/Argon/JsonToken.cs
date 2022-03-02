@@ -10,7 +10,6 @@ namespace Argon;
 public enum JsonToken
 {
     /// <summary>
-    /// This is returned by the <see cref="JsonReader"/> if a read method has not been called.
     /// </summary>
     None = 0,
 

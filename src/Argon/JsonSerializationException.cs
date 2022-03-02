@@ -60,16 +60,6 @@ public class JsonSerializationException : JsonException
         LinePosition = linePosition;
     }
 
-    internal static JsonSerializationException Create(JsonReader reader, string message)
-    {
-        return Create(reader, message, null);
-    }
-
-    internal static JsonSerializationException Create(JsonReader reader, string message, Exception? exception)
-    {
-        return Create(reader as IJsonLineInfo, reader.Path, message, exception);
-    }
-
     internal static JsonSerializationException Create(IJsonLineInfo? lineInfo, string path, string message, Exception? exception)
     {
         message = JsonPosition.FormatMessage(lineInfo, path, message);

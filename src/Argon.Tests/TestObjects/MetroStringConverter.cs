@@ -15,21 +15,6 @@ public class MetroStringConverter : JsonConverter
 #endif
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        var s = (string)reader.Value;
-        if (s == null)
-        {
-            return null;
-        }
-
-#if !NET5_0_OR_GREATER
-        return s.ToLower(CultureInfo.InvariantCulture).Trim(':');
-#else
-        return s.ToLower().Trim(':');
-#endif
-    }
-
     public override bool CanConvert(Type type)
     {
         return type == typeof(string);

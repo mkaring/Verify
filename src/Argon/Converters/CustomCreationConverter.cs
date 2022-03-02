@@ -18,26 +18,6 @@ public abstract class CustomCreationConverter<T> : JsonConverter
     }
 
     /// <summary>
-    /// Reads the JSON representation of the object.
-    /// </summary>
-    public override object? ReadJson(JsonReader reader, Type type, object? existingValue, JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
-        }
-
-        var value = Create(type);
-        if (value == null)
-        {
-            throw new JsonSerializationException("No object created.");
-        }
-
-        serializer.Populate(reader, value);
-        return value;
-    }
-
-    /// <summary>
     /// Creates an object which will then be populated by the serializer.
     /// </summary>
     /// <returns>The created object.</returns>

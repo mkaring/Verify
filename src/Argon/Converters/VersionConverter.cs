@@ -24,31 +24,6 @@ public class VersionConverter : JsonConverter
     }
 
     /// <summary>
-    /// Reads the JSON representation of the object.
-    /// </summary>
-    public override object? ReadJson(JsonReader reader, Type type, object? existingValue, JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
-        }
-
-        if (reader.TokenType == JsonToken.String)
-        {
-            try
-            {
-                return new Version((string)reader.Value!);
-            }
-            catch (Exception exception)
-            {
-                throw JsonSerializationException.Create(reader, $"Error parsing version string: {reader.Value}", exception);
-            }
-        }
-
-        throw JsonSerializationException.Create(reader, $"Unexpected token or value when parsing version. Token: {reader.TokenType}, Value: {reader.Value}");
-    }
-
-    /// <summary>
     /// Determines whether this instance can convert the specified object type.
     /// </summary>
     /// <returns>

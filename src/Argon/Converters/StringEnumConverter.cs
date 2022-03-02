@@ -100,57 +100,6 @@ public class StringEnumConverter : JsonConverter
     }
 
     /// <summary>
-    /// Reads the JSON representation of the object.
-    /// </summary>
-    public override object? ReadJson(JsonReader reader, Type type, object? existingValue, JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            if (!type.IsNullableType())
-            {
-                throw JsonSerializationException.Create(reader, $"Cannot convert null value to {type}.");
-            }
-
-            return null;
-        }
-
-        var isNullable = type.IsNullableType();
-        var t = isNullable ? Nullable.GetUnderlyingType(type)! : type;
-
-        try
-        {
-            if (reader.TokenType == JsonToken.String)
-            {
-                var enumText = reader.Value?.ToString();
-
-                if (StringUtils.IsNullOrEmpty(enumText) && isNullable)
-                {
-                    return null;
-                }
-
-                return EnumUtils.ParseEnum(t, NamingStrategy, enumText!, !AllowIntegerValues);
-            }
-
-            if (reader.TokenType == JsonToken.Integer)
-            {
-                if (!AllowIntegerValues)
-                {
-                    throw JsonSerializationException.Create(reader, $"Integer value {reader.Value} is not allowed.");
-                }
-
-                return ConvertUtils.ConvertOrCast(reader.Value, CultureInfo.InvariantCulture, t);
-            }
-        }
-        catch (Exception exception)
-        {
-            throw JsonSerializationException.Create(reader, $"Error converting value {MiscellaneousUtils.ToString(reader.Value)} to type '{type}'.", exception);
-        }
-
-        // we don't actually expect to get here.
-        throw JsonSerializationException.Create(reader, $"Unexpected token {reader.TokenType} when parsing enum.");
-    }
-
-    /// <summary>
     /// Determines whether this instance can convert the specified object type.
     /// </summary>
     /// <returns>

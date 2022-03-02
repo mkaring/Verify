@@ -13,7 +13,6 @@ public abstract class JsonContract
     internal bool IsConvertable;
     internal bool IsEnum;
     internal Type NonNullableUnderlyingType;
-    internal ReadType InternalReadType;
     internal JsonContractType ContractType;
     internal bool IsReadOnlyOrFixedSize;
     internal bool IsSealed;
@@ -121,8 +120,6 @@ public abstract class JsonContract
 
         IsConvertable = NonNullableUnderlyingType.IsConvertible();
         IsEnum = NonNullableUnderlyingType.IsEnum;
-
-        InternalReadType = ReadType.Read;
     }
 
     internal void InvokeOnSerializing(object o, StreamingContext? context)

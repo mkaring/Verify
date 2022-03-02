@@ -33,28 +33,4 @@ public static partial class Verifier
     {
         return Verify(settings, sourceFile, _ => _.Verify(target));
     }
-
-    public static SettingsTask VerifyJson(
-        string target,
-        VerifySettings? settings = null,
-        [CallerFilePath] string sourceFile = "")
-    {
-        return Verify(settings, sourceFile, _ => _.VerifyJson(target));
-    }
-
-    public static SettingsTask VerifyJson(
-        JToken target,
-        VerifySettings? settings = null,
-        [CallerFilePath] string sourceFile = "")
-    {
-        return Verify(settings, sourceFile, _ => _.VerifyJson(target));
-    }
-
-    public static SettingsTask VerifyJson(
-        Stream target,
-        VerifySettings? settings = null,
-        [CallerFilePath] string sourceFile = "")
-    {
-        return Verify(settings, sourceFile, _ => _.VerifyJson(target));
-    }
 }

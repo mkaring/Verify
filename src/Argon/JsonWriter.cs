@@ -351,23 +351,6 @@ public abstract partial class JsonWriter : IDisposable
     }
 
     /// <summary>
-    /// Writes the current <see cref="JsonReader"/> token and its children.
-    /// </summary>
-    public void WriteToken(JsonReader reader)
-    {
-        WriteToken(reader, true);
-    }
-
-    /// <summary>
-    /// Writes the current <see cref="JsonReader"/> token.
-    /// </summary>
-    /// <param name="writeChildren">A flag indicating whether the current token's children should be written.</param>
-    public void WriteToken(JsonReader reader, bool writeChildren)
-    {
-        WriteToken(reader, writeChildren, true, true);
-    }
-
-    /// <summary>
     /// Writes the <see cref="JsonToken"/> token and its value.
     /// </summary>
     /// <param name="value">
@@ -476,57 +459,6 @@ public abstract partial class JsonWriter : IDisposable
     public void WriteToken(JsonToken token)
     {
         WriteToken(token, null);
-    }
-
-    internal virtual void WriteToken(JsonReader reader, bool writeChildren, bool writeDateConstructorAsDate, bool writeComments)
-    {
-        var initialDepth = CalculateWriteTokenInitialDepth(reader);
-
-        do
-        {
-            if (writeComments || reader.TokenType != JsonToken.Comment)
-            {
-                WriteToken(reader.TokenType, reader.Value);
-            }
-        } while (
-            // stop if we have reached the end of the token being read
-            initialDepth - 1 < reader.Depth - (JsonTokenUtils.IsEndToken(reader.TokenType) ? 1 : 0)
-            && writeChildren
-            && reader.Read());
-
-        if (IsWriteTokenIncomplete(reader, writeChildren, initialDepth))
-        {
-            throw JsonWriterException.Create(this, "Unexpected end when reading token.");
-        }
-    }
-
-    static bool IsWriteTokenIncomplete(JsonReader reader, bool writeChildren, int initialDepth)
-    {
-        var finalDepth = CalculateWriteTokenFinalDepth(reader);
-        return initialDepth < finalDepth ||
-               (writeChildren && initialDepth == finalDepth && JsonTokenUtils.IsStartToken(reader.TokenType));
-    }
-
-    static int CalculateWriteTokenInitialDepth(JsonReader reader)
-    {
-        var type = reader.TokenType;
-        if (type == JsonToken.None)
-        {
-            return -1;
-        }
-
-        return JsonTokenUtils.IsStartToken(type) ? reader.Depth : reader.Depth + 1;
-    }
-
-    static int CalculateWriteTokenFinalDepth(JsonReader reader)
-    {
-        var type = reader.TokenType;
-        if (type == JsonToken.None)
-        {
-            return -1;
-        }
-
-        return JsonTokenUtils.IsEndToken(type) ? reader.Depth - 1 : reader.Depth;
     }
 
     void WriteEnd(JsonContainerType type)

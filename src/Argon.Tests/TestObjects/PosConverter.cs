@@ -20,11 +20,6 @@ public class PosConverter : JsonConverter
         }
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        throw new NotImplementedException();
-    }
-
     public override bool CanConvert(Type type)
     {
         return type == typeof(Pos);

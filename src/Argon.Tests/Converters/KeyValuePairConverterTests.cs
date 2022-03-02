@@ -26,21 +26,5 @@
     ""Value"": 456
   }
 ]", json);
-
-        var v2 = JsonConvert.DeserializeObject<IList<KeyValuePair<string, int>>>(json);
-
-        Assert.Equal(2, v2.Count);
-        Assert.Equal("123", v2[0].Key);
-        Assert.Equal(123, v2[0].Value);
-        Assert.Equal("456", v2[1].Key);
-        Assert.Equal(456, v2[1].Value);
-    }
-
-    [Fact]
-    public void DeserializeUnexpectedEnd()
-    {
-        XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<KeyValuePair<string, int>>(@"{""Key"": ""123"","),
-            "Unexpected end when reading JSON. Path 'Key', line 1, position 14.");
     }
 }

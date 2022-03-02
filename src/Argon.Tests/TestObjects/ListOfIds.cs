@@ -18,26 +18,6 @@ public class ListOfIds<T> : JsonConverter where T : Bar, new()
         writer.WriteEndArray();
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        var list = new List<T>();
-
-        reader.Read();
-        while (reader.TokenType != JsonToken.EndArray)
-        {
-            var id = (long)reader.Value;
-
-            list.Add(new T
-            {
-                Id = Convert.ToInt32(id)
-            });
-
-            reader.Read();
-        }
-
-        return list;
-    }
-
     public override bool CanConvert(Type type)
     {
         return typeof(IList<T>).IsAssignableFrom(type);

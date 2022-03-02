@@ -6,59 +6,6 @@ using TestObjects;
 
 public class CustomCreationConverterTests : TestFixtureBase
 {
-    [Fact]
-    public void DeserializeObject()
-    {
-        var json = JsonConvert.SerializeObject(new List<Employee>
-        {
-            new()
-            {
-                BirthDate = new DateTime(1977, 12, 30, 1, 1, 1, DateTimeKind.Utc),
-                FirstName = "Maurice",
-                LastName = "Moss",
-                Department = "IT",
-                JobTitle = "Support"
-            },
-            new()
-            {
-                BirthDate = new DateTime(1978, 3, 15, 1, 1, 1, DateTimeKind.Utc),
-                FirstName = "Jen",
-                LastName = "Barber",
-                Department = "IT",
-                JobTitle = "Manager"
-            }
-        }, Formatting.Indented);
-
-        //[
-        //  {
-        //    "FirstName": "Maurice",
-        //    "LastName": "Moss",
-        //    "BirthDate": "\/Date(252291661000)\/",
-        //    "Department": "IT",
-        //    "JobTitle": "Support"
-        //  },
-        //  {
-        //    "FirstName": "Jen",
-        //    "LastName": "Barber",
-        //    "BirthDate": "\/Date(258771661000)\/",
-        //    "Department": "IT",
-        //    "JobTitle": "Manager"
-        //  }
-        //]
-
-        var people = JsonConvert.DeserializeObject<List<IPerson>>(json, new PersonConverter());
-
-        var person = people[0];
-
-        Assert.Equal("Employee", person.GetType().Name);
-
-        Assert.Equal("Maurice", person.FirstName);
-
-        var employee = (Employee)person;
-
-        Assert.Equal("Support", employee.JobTitle);
-    }
-
     public class MyClass
     {
         public string Value { get; set; }
@@ -83,23 +30,6 @@ public class CustomCreationConverterTests : TestFixtureBase
         {
             return new MyThing();
         }
-    }
-
-    [Fact]
-    public void AssertDoesDeserialize()
-    {
-        const string json = @"{
-""Value"": ""A value"",
-""Thing"": {
-""Number"": 123
-}
-}
-";
-        var myClass = JsonConvert.DeserializeObject<MyClass>(json);
-        Assert.NotNull(myClass);
-        Assert.Equal("A value", myClass.Value);
-        Assert.NotNull(myClass.Thing);
-        Assert.Equal(123, myClass.Thing.Number);
     }
 
     [Fact]
@@ -183,17 +113,5 @@ public class CustomCreationConverterTests : TestFixtureBase
   },
   ""NullDecimalRange"": null
 }", json);
-
-        var deserialized = JsonConvert.DeserializeObject<NullInterfaceTestClass>(
-            json, new IntRangeConverter(), new DecimalRangeConverter());
-
-        Assert.Equal("Company!", deserialized.Company);
-        Assert.Equal(new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), deserialized.Id);
-        Assert.Equal(0, deserialized.DecimalRange.First);
-        Assert.Equal(1, deserialized.DecimalRange.Last);
-        Assert.Equal(int.MinValue, deserialized.IntRange.First);
-        Assert.Equal(int.MaxValue, deserialized.IntRange.Last);
-        Assert.Equal(null, deserialized.NullDecimalRange);
-        Assert.Equal(2010, deserialized.Year);
     }
 }

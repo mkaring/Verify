@@ -79,28 +79,6 @@ public class DemoTests : TestFixtureBase
             writer.WriteValue($"#{hexString}");
         }
 
-        //public override object ReadJson(JsonReader reader, Type type,
-        //    object existingValue, JsonSerializer serializer)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public override object ReadJson(JsonReader reader, Type type,
-            object existingValue, JsonSerializer serializer)
-        {
-            // get hex string
-            var hexString = (string) reader.Value;
-            hexString = hexString.TrimStart('#');
-
-            // build html color from hex
-            return new HtmlColor
-            {
-                Red = Convert.ToInt32(hexString.Substring(0, 2), 16),
-                Green = Convert.ToInt32(hexString.Substring(2, 2), 16),
-                Blue = Convert.ToInt32(hexString.Substring(4, 2), 16)
-            };
-        }
-
         public override bool CanConvert(Type type)
         {
             return type == typeof(HtmlColor);
@@ -192,38 +170,6 @@ public class DemoTests : TestFixtureBase
   ""Name"": ""Serialize All The Things"",
   ""Date"": ""2014-06-04T00:00:00Z""
 }", j);
-    }
-
-    [Fact]
-    public void DeserializationBasics1()
-    {
-        var j = @"{
-              Name: 'Serialize All The Things',
-              Date: '2014-06-03'
-            }";
-
-        var s = JsonConvert.DeserializeObject<Session>(j, new JsonSerializerSettings());
-        // Name = Serialize All The Things
-        // Date = Tuesday, 3 June 2014
-
-        Assert.Equal("Serialize All The Things", s.Name);
-    }
-
-    [Fact]
-    public void DeserializationBasics2()
-    {
-        var s = new Session
-        {
-            Date = new DateTime(2014, 6, 4)
-        };
-
-        var j = @"{
-              'Name': 'Serialize All The Things'
-            }";
-
-        JsonConvert.PopulateObject(j, s);
-        // Name = Serialize All The Things
-        // Date = Tuesday, 3 June 2014
     }
 
     public class City
@@ -351,49 +297,6 @@ public class DemoTests : TestFixtureBase
 }", json);
     }
 
-    [Fact]
-    public void RoundtripTypesAndReferences()
-    {
-        var json = @"{
-  '$id': '1',
-  '$type': 'DemoTests+Manager, Argon.Tests',
-  'Reportees': [
-    {
-      '$id': '2',
-      '$type': 'DemoTests+Employee, Argon.Tests',
-      'Name': 'Arnie Admin'
-    },
-    {
-      '$id': '3',
-      '$type': 'DemoTests+Manager, Argon.Tests',
-      'Reportees': [
-        {
-          '$ref': '2'
-        }
-      ],
-      'Name': 'Susan Supervisor'
-    }
-  ],
-  'Name': 'Mike Manager'
-}";
-
-        var e = JsonConvert.DeserializeObject<Employee>(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Objects,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
-        });
-        // Name = Mike Manager
-        // Reportees = Arnie Admin, Susan Supervisor
-
-        var mike = (Manager) e;
-        var susan = (Manager) mike.Reportees[1];
-
-        ReferenceEquals(mike.Reportees[0], susan.Reportees[0]);
-        // true
-
-        Assert.True(ReferenceEquals(mike.Reportees[0], susan.Reportees[0]));
-    }
-
     public class House
     {
         public string StreetAddress { get; set; }
@@ -491,64 +394,6 @@ public class DemoTests : TestFixtureBase
         //   "buildDate": new Date(-2524568400000),
         //   "address": "221B Baker Street"
         // }
-    }
-
-    [Fact]
-    public void MergeJson()
-    {
-        var o1 = JObject.Parse(@"{
-              'FirstName': 'John',
-              'LastName': 'Smith',
-              'Enabled': false,
-              'Roles': [ 'User' ]
-            }");
-        var o2 = JObject.Parse(@"{
-              'Enabled': true,
-              'Roles': [ 'User', 'Admin' ]
-            }");
-
-        o1.Merge(o2, new JsonMergeSettings
-        {
-            // union arrays together to avoid duplicates
-            MergeArrayHandling = MergeArrayHandling.Union
-        });
-
-        var json = o1.ToString();
-        // {
-        //   "FirstName": "John",
-        //   "LastName": "Smith",
-        //   "Enabled": true,
-        //   "Roles": [
-        //     "User",
-        //     "Admin"
-        //   ]
-        // }
-
-        XUnitAssert.AreEqualNormalized(@"{
-  ""FirstName"": ""John"",
-  ""LastName"": ""Smith"",
-  ""Enabled"": true,
-  ""Roles"": [
-    ""User"",
-    ""Admin""
-  ]
-}", json);
-    }
-
-    [Fact]
-    public void ArrayPooling()
-    {
-        IList<int> value;
-
-        var serializer = new JsonSerializer();
-        using (var reader = new JsonTextReader(new StringReader(@"[1,2,3,4]")))
-        {
-            reader.ArrayPool = JsonArrayPool.Instance;
-
-            value = serializer.Deserialize<IList<int>>(reader);
-        }
-
-        Assert.Equal(4, value.Count);
     }
 }
 

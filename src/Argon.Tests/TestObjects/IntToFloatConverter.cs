@@ -11,11 +11,6 @@ public class IntToFloatConverter : JsonConverter
         writer.WriteValue(Convert.ToDouble(value));
     }
 
-    public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-    {
-        return Convert.ToInt32(reader.Value);
-    }
-
     public override bool CanConvert(Type type)
     {
         return type == typeof(int);

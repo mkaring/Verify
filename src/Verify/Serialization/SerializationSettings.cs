@@ -4,8 +4,6 @@ namespace VerifyTests;
 
 public partial class SerializationSettings
 {
-    static ArgonJArrayConverter argonJArrayConverter = new();
-    static ArgonJObjectConverter argonJObjectConverter = new();
     static NewtonsoftJArrayConverter newtonsoftJArrayConverter = new();
     static NewtonsoftJObjectConverter newtonsoftJObjectConverter = new();
     static FileInfoConverter fileInfoConverter = new();
@@ -137,8 +135,6 @@ public partial class SerializationSettings
         converters.Add(claimsIdentityConverter);
         converters.Add(claimsPrincipalConverter);
         converters.Add(new DictionaryConverter(ignoredByNameMembers));
-        converters.Add(argonJArrayConverter);
-        converters.Add(argonJObjectConverter);
         converters.Add(newtonsoftJArrayConverter);
         converters.Add(newtonsoftJObjectConverter);
         converters.Add(nameValueCollectionConverter);

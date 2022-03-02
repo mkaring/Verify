@@ -6,7 +6,6 @@ using ErrorEventArgs = Argon.ErrorEventArgs;
 
 class JsonSerializerProxy : JsonSerializer
 {
-    readonly JsonSerializerInternalReader? serializerReader;
     readonly JsonSerializerInternalWriter? serializerWriter;
     internal readonly JsonSerializer serializer;
 
@@ -176,18 +175,7 @@ class JsonSerializerProxy : JsonSerializer
 
     internal JsonSerializerInternalBase GetInternalSerializer()
     {
-        if (serializerReader == null)
-        {
             return serializerWriter!;
-        }
-
-        return serializerReader;
-    }
-
-    public JsonSerializerProxy(JsonSerializerInternalReader serializerReader)
-    {
-        this.serializerReader = serializerReader;
-        serializer = serializerReader.Serializer;
     }
 
     public JsonSerializerProxy(JsonSerializerInternalWriter serializerWriter)
@@ -196,26 +184,6 @@ class JsonSerializerProxy : JsonSerializer
         serializer = serializerWriter.Serializer;
     }
 
-    internal override object? DeserializeInternal(JsonReader reader, Type? type)
-    {
-        if (serializerReader == null)
-        {
-            return serializer.Deserialize(reader, type);
-        }
-
-        return serializerReader.Deserialize(reader, type, false);
-    }
-
-    internal override void PopulateInternal(JsonReader reader, object target)
-    {
-        if (serializerReader == null)
-        {
-            serializer.Populate(reader, target);
-            return;
-        }
-
-        serializerReader.Populate(reader, target);
-    }
 
     internal override void SerializeInternal(JsonWriter jsonWriter, object? value, Type? rootType)
     {

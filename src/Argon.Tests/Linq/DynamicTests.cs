@@ -7,31 +7,6 @@ using System.Dynamic;
 
 public class LinqDynamicTests : TestFixtureBase
 {
-    [Fact]
-    public void AccessPropertyValue()
-    {
-        var rawJson = @"{
-  ""task"": {
-    ""dueDate"": ""2012-12-03T00:00:00""
-  }
-}";
-
-        var dyn = JsonConvert.DeserializeObject<dynamic>(rawJson);
-        DateTime dueDate = dyn.task.dueDate.Value;
-
-        Assert.Equal(new DateTime(2012, 12, 3, 0, 0, 0, DateTimeKind.Unspecified), dueDate);
-    }
-
-    [Fact]
-    public void PropertyDoesNotEqualNull()
-    {
-        var session = JsonConvert.DeserializeObject<dynamic>("{}");
-        if (session.sessionInfo != null)
-        {
-            XUnitAssert.Fail();
-        }
-    }
-
     static void UpdateValueCount(IDictionary<string, int> counts, dynamic d)
     {
         string s = d.ToString();
@@ -43,43 +18,6 @@ public class LinqDynamicTests : TestFixtureBase
 
         c++;
         counts[s] = c;
-    }
-
-    [Fact]
-    public void DeserializeLargeDynamic()
-    {
-        dynamic d;
-
-        using (var jsonFile = File.OpenText("large.json"))
-        using (var jsonTextReader = new JsonTextReader(jsonFile))
-        {
-            var serializer = new JsonSerializer();
-            d = serializer.Deserialize(jsonTextReader);
-        }
-
-        var counts = new Dictionary<string, int>();
-
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
-
-        var count = 0;
-        foreach (var o in d)
-        {
-            if (count > 10)
-            {
-                break;
-            }
-
-            foreach (var friend in o.friends)
-            {
-                UpdateValueCount(counts, friend.id);
-                UpdateValueCount(counts, ((string) friend.name).Split(' ')[0]);
-            }
-
-            count++;
-        }
-
-        Console.WriteLine($"Time (secs): {stopwatch.Elapsed.TotalSeconds}");
     }
 
     [Fact]
@@ -775,9 +713,6 @@ public class LinqDynamicTests : TestFixtureBase
         //   ]
         // }
 
-        dynamic newValue = JsonConvert.DeserializeObject<DynamicDictionary>(json);
-
-        string role = newValue.Roles[0];
         // Admin
     }
 

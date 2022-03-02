@@ -33,13 +33,6 @@ public class CustomJsonConverter : TestFixtureBase
             }
         }
 
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException("Unnecessary because CanRead is false. The type will skip the converter.");
-        }
-
-        public override bool CanRead => false;
-
         public override bool CanConvert(Type type)
         {
             return _types.Any(t => t == type);

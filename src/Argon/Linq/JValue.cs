@@ -9,7 +9,7 @@ namespace Argon;
 /// <summary>
 /// Represents a value in JSON (string, integer, date, etc).
 /// </summary>
-public partial class JValue : JToken, IEquatable<JValue>, IFormattable, IComparable, IComparable<JValue>, IConvertible
+public partial class JValue : JToken, IEquatable<JValue>, IFormattable, IComparable, IComparable<JValue>
 {
     JTokenType valueType;
     object? value;
@@ -987,95 +987,5 @@ public partial class JValue : JToken, IEquatable<JValue>, IFormattable, ICompara
             : valueType;
 
         return Compare(comparisonType, value, obj.value);
-    }
-
-    TypeCode IConvertible.GetTypeCode()
-    {
-        if (value == null)
-        {
-            return TypeCode.Empty;
-        }
-
-        if (value is IConvertible convertable)
-        {
-            return convertable.GetTypeCode();
-        }
-
-        return TypeCode.Object;
-    }
-
-    bool IConvertible.ToBoolean(IFormatProvider? provider)
-    {
-        return (bool)this;
-    }
-
-    char IConvertible.ToChar(IFormatProvider? provider)
-    {
-        return (char)this;
-    }
-
-    sbyte IConvertible.ToSByte(IFormatProvider? provider)
-    {
-        return (sbyte)this;
-    }
-
-    byte IConvertible.ToByte(IFormatProvider? provider)
-    {
-        return (byte)this;
-    }
-
-    short IConvertible.ToInt16(IFormatProvider? provider)
-    {
-        return (short)this;
-    }
-
-    ushort IConvertible.ToUInt16(IFormatProvider? provider)
-    {
-        return (ushort)this;
-    }
-
-    int IConvertible.ToInt32(IFormatProvider? provider)
-    {
-        return (int)this;
-    }
-
-    uint IConvertible.ToUInt32(IFormatProvider? provider)
-    {
-        return (uint)this;
-    }
-
-    long IConvertible.ToInt64(IFormatProvider? provider)
-    {
-        return (long)this;
-    }
-
-    ulong IConvertible.ToUInt64(IFormatProvider? provider)
-    {
-        return (ulong)this;
-    }
-
-    float IConvertible.ToSingle(IFormatProvider? provider)
-    {
-        return (float)this;
-    }
-
-    double IConvertible.ToDouble(IFormatProvider? provider)
-    {
-        return (double)this;
-    }
-
-    decimal IConvertible.ToDecimal(IFormatProvider? provider)
-    {
-        return (decimal)this;
-    }
-
-    DateTime IConvertible.ToDateTime(IFormatProvider? provider)
-    {
-        return (DateTime)this;
-    }
-
-    object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
-    {
-        return ToObject(conversionType)!;
     }
 }

@@ -160,53 +160,10 @@ public class StringEnumConverterTests : TestFixtureBase
     }
 
     [Fact]
-    public void Deserialize_CamelCaseFromAttribute()
-    {
-        var e = JsonConvert.DeserializeObject<CamelCaseEnumNew>(@"""camelCase""");
-        Assert.Equal(CamelCaseEnumNew.CamelCase, e);
-    }
-
-    [Fact]
     public void Serialize_SnakeCaseFromAttribute()
     {
         var json = JsonConvert.SerializeObject(SnakeCaseEnumNew.SnakeCase);
         Assert.Equal(@"""snake_case""", json);
-    }
-
-    [Fact]
-    public void Deserialize_SnakeCaseFromAttribute()
-    {
-        var e = JsonConvert.DeserializeObject<SnakeCaseEnumNew>(@"""snake_case""");
-        Assert.Equal(SnakeCaseEnumNew.SnakeCase, e);
-    }
-
-    [Fact]
-    public void Deserialize_NotAllowIntegerValuesFromAttribute()
-    {
-        XUnitAssert.Throws<JsonSerializationException>(
-            () =>
-            {
-                var e = JsonConvert.DeserializeObject<NotAllowIntegerValuesEnum>(@"""9""");
-            });
-    }
-
-    [Fact]
-    public void CannotPassNullArgumentToConverter()
-    {
-        var ex = XUnitAssert.Throws<JsonException>(
-            () =>
-        {
-            JsonConvert.DeserializeObject<NullArgumentInAttribute>(@"""9""");
-        });
-
-        Assert.Equal("Cannot pass a null parameter to the constructor.", ex.InnerException.Message);
-    }
-
-    [Fact]
-    public void Deserialize_AllowIntegerValuesAttribute()
-    {
-        var e = JsonConvert.DeserializeObject<AllowIntegerValuesEnum>(@"""9""");
-        Assert.Equal(9, (int)e);
     }
 
     [Fact]
@@ -261,9 +218,6 @@ public class StringEnumConverterTests : TestFixtureBase
         XUnitAssert.AreEqualNormalized(@"{
   ""Enum"": "",third""
 }", json);
-
-        var c2 = JsonConvert.DeserializeObject<EnumContainer<NamedEnumWithComma>>(json, new StringEnumConverter());
-        Assert.Equal(NamedEnumWithComma.Third, c2.Enum);
     }
 
     [Fact]
@@ -278,34 +232,6 @@ public class StringEnumConverterTests : TestFixtureBase
         XUnitAssert.AreEqualNormalized(@"{
   ""Enum"": "",""
 }", json);
-
-        var c2 = JsonConvert.DeserializeObject<EnumContainer<NamedEnumWithComma>>(json, new StringEnumConverter());
-        Assert.Equal(NamedEnumWithComma.JustComma, c2.Enum);
-    }
-
-    [Fact]
-    public void NamedEnumCommaCaseInsensitiveTest()
-    {
-        var c2 = JsonConvert.DeserializeObject<EnumContainer<NamedEnumWithComma>>(@"{""Enum"":"",THIRD""}", new StringEnumConverter());
-        Assert.Equal(NamedEnumWithComma.Third, c2.Enum);
-    }
-
-    [Fact]
-    public void DeserializeNameEnumTest()
-    {
-        var json = @"{
-  ""Enum"": ""@first""
-}";
-
-        var c = JsonConvert.DeserializeObject<EnumContainer<NamedEnum>>(json, new StringEnumConverter());
-        Assert.Equal(NamedEnum.First, c.Enum);
-
-        json = @"{
-  ""Enum"": ""Third""
-}";
-
-        c = JsonConvert.DeserializeObject<EnumContainer<NamedEnum>>(json, new StringEnumConverter());
-        Assert.Equal(NamedEnum.Third, c.Enum);
     }
 
     [Fact]
@@ -402,20 +328,6 @@ public class StringEnumConverterTests : TestFixtureBase
     }
 
     [Fact]
-    public void DeserializeNegativeFlagsEnum()
-    {
-        var json = @"{
-  ""Value1"": ""NegativeFour,NegativeTwo"",
-  ""Value2"": ""NegativeFour,Four""
-}";
-
-        var negativeEnumClass = JsonConvert.DeserializeObject<NegativeFlagsEnumClass>(json, new StringEnumConverter());
-
-        Assert.Equal(NegativeFlagsEnum.NegativeFour | NegativeFlagsEnum.NegativeTwo, negativeEnumClass.Value1);
-        Assert.Equal(NegativeFlagsEnum.NegativeFour | NegativeFlagsEnum.Four, negativeEnumClass.Value2);
-    }
-
-    [Fact]
     public void SerializeNegativeEnum()
     {
         var negativeEnumClass = new NegativeEnumClass
@@ -433,68 +345,6 @@ public class StringEnumConverterTests : TestFixtureBase
     }
 
     [Fact]
-    public void DeserializeNegativeEnum()
-    {
-        var json = @"{
-  ""Value1"": ""Negative"",
-  ""Value2"": -2147483648
-}";
-
-        var negativeEnumClass = JsonConvert.DeserializeObject<NegativeEnumClass>(json, new StringEnumConverter());
-
-        Assert.Equal(NegativeEnum.Negative, negativeEnumClass.Value1);
-        Assert.Equal((NegativeEnum)int.MinValue, negativeEnumClass.Value2);
-    }
-
-    [Fact]
-    public void DeserializeFlagEnum()
-    {
-        var json = @"{
-  ""StoreColor"": ""Red, White"",
-  ""NullableStoreColor1"": 0,
-  ""NullableStoreColor2"": ""black, Red, White""
-}";
-
-        var enumClass = JsonConvert.DeserializeObject<EnumClass>(json, new StringEnumConverter());
-
-        Assert.Equal(StoreColor.Red | StoreColor.White, enumClass.StoreColor);
-        Assert.Equal((StoreColor)0, enumClass.NullableStoreColor1);
-        Assert.Equal(StoreColor.Red | StoreColor.White | StoreColor.Black, enumClass.NullableStoreColor2);
-    }
-
-    [Fact]
-    public void DeserializeEnumClass()
-    {
-        var json = @"{
-  ""StoreColor"": ""Red"",
-  ""NullableStoreColor1"": ""White"",
-  ""NullableStoreColor2"": null
-}";
-
-        var enumClass = JsonConvert.DeserializeObject<EnumClass>(json, new StringEnumConverter());
-
-        Assert.Equal(StoreColor.Red, enumClass.StoreColor);
-        Assert.Equal(StoreColor.White, enumClass.NullableStoreColor1);
-        Assert.Equal(null, enumClass.NullableStoreColor2);
-    }
-
-    [Fact]
-    public void DeserializeEnumClassUndefined()
-    {
-        var json = @"{
-  ""StoreColor"": 1000,
-  ""NullableStoreColor1"": 1000,
-  ""NullableStoreColor2"": null
-}";
-
-        var enumClass = JsonConvert.DeserializeObject<EnumClass>(json, new StringEnumConverter());
-
-        Assert.Equal((StoreColor)1000, enumClass.StoreColor);
-        Assert.Equal((StoreColor)1000, enumClass.NullableStoreColor1);
-        Assert.Equal(null, enumClass.NullableStoreColor2);
-    }
-
-    [Fact]
     public void CamelCaseTextFlagEnumSerialization()
     {
         var c = new EnumContainer<FlagsTestEnum>
@@ -508,45 +358,6 @@ public class StringEnumConverterTests : TestFixtureBase
 }", json);
     }
 
-    [Fact]
-    public void CamelCaseTextFlagEnumDeserialization()
-    {
-        var json = @"{
-  ""Enum"": ""first, second""
-}";
-
-        var c = JsonConvert.DeserializeObject<EnumContainer<FlagsTestEnum>>(json, new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy()  });
-        Assert.Equal(FlagsTestEnum.First | FlagsTestEnum.Second, c.Enum);
-    }
-
-    [Fact]
-    public void DeserializeEmptyStringIntoNullable()
-    {
-        var json = @"{
-  ""StoreColor"": ""Red"",
-  ""NullableStoreColor1"": ""White"",
-  ""NullableStoreColor2"": """"
-}";
-
-        var c = JsonConvert.DeserializeObject<EnumClass>(json, new StringEnumConverter());
-        Assert.Null(c.NullableStoreColor2);
-    }
-
-    [Fact]
-    public void DeserializeInvalidString()
-    {
-        var json = "{ \"Value\" : \"Three\" }";
-
-        XUnitAssert.Throws<JsonSerializationException>(
-            () =>
-            {
-                var serializer = new JsonSerializer();
-                serializer.Converters.Add(new StringEnumConverter());
-                serializer.Deserialize<Bucket>(new JsonTextReader(new StringReader(json)));
-            },
-            @"Error converting value ""Three"" to type 'StringEnumConverterTests+MyEnum'. Path 'Value', line 1, position 19.");
-    }
-
     public class Bucket
     {
         public MyEnum Value;
@@ -556,28 +367,6 @@ public class StringEnumConverterTests : TestFixtureBase
     {
         Alpha,
         Beta,
-    }
-
-    [Fact]
-    public void DeserializeIntegerButNotAllowed()
-    {
-        var json = "{ \"Value\" : 123 }";
-
-        try
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new StringEnumConverter { AllowIntegerValues = false });
-            serializer.Deserialize<Bucket>(new JsonTextReader(new StringReader(json)));
-        }
-        catch (JsonSerializationException exception)
-        {
-            Assert.Equal("Error converting value 123 to type 'StringEnumConverterTests+MyEnum'. Path 'Value', line 1, position 15.", exception.Message);
-            Assert.Equal(@"Integer value 123 is not allowed. Path 'Value', line 1, position 15.", exception.InnerException.Message);
-
-            return;
-        }
-
-        XUnitAssert.Fail();
     }
 
     [Fact]
@@ -604,41 +393,6 @@ public class StringEnumConverterTests : TestFixtureBase
   ""foo_bar, baz"",
   2147483647
 ]", json1);
-
-        var foos = JsonConvert.DeserializeObject<List<Foo>>(json1);
-
-        Assert.Equal(6, foos.Count);
-        Assert.Equal(Foo.Bat | Foo.SerializeAsBaz, foos[0]);
-        Assert.Equal(Foo.FooBar, foos[1]);
-        Assert.Equal(Foo.Bat, foos[2]);
-        Assert.Equal(Foo.SerializeAsBaz, foos[3]);
-        Assert.Equal(Foo.FooBar | Foo.SerializeAsBaz, foos[4]);
-        Assert.Equal((Foo)int.MaxValue, foos[5]);
-
-        var lbar = new List<Bar> { Bar.FooBar, Bar.Bat, Bar.SerializeAsBaz };
-
-        var json2 = JsonConvert.SerializeObject(lbar, Formatting.Indented, new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy() });
-
-        XUnitAssert.AreEqualNormalized(@"[
-  ""foo_bar"",
-  ""Bat"",
-  ""baz""
-]", json2);
-
-        var bars = JsonConvert.DeserializeObject<List<Bar>>(json2);
-
-        Assert.Equal(3, bars.Count);
-        Assert.Equal(Bar.FooBar, bars[0]);
-        Assert.Equal(Bar.Bat, bars[1]);
-        Assert.Equal(Bar.SerializeAsBaz, bars[2]);
-    }
-
-    [Fact]
-    public void DuplicateNameEnumTest()
-    {
-        XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<DuplicateNameEnum>("'foo_bar'", new StringEnumConverter()),
-            @"Error converting value ""foo_bar"" to type 'DuplicateNameEnum'. Path '', line 1, position 9.");
     }
 
     // Define other methods and classes here
@@ -691,102 +445,6 @@ public class StringEnumConverterTests : TestFixtureBase
                 Assert.Equal(DuplicateNameEnum2.FooBar, o.Value2);
             },
             "Type 'DuplicateNameEnum' contains two members 'foo_bar' 'and 'FooBar' with the same name 'foo_bar'. Multiple members with the same name in one type are not supported. Consider changing one of the member names using EnumMemberAttribute attribute.");
-    }
-
-    [Fact]
-    public void EnumMemberWithNumbers()
-    {
-        var converter = new StringEnumConverter();
-
-        var e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"1\"", converter);
-
-        Assert.Equal(NumberNamesEnum.second, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"2\"", converter);
-
-        Assert.Equal(NumberNamesEnum.first, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"3\"", converter);
-
-        Assert.Equal(NumberNamesEnum.third, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"-4\"", converter);
-
-        Assert.Equal(NumberNamesEnum.fourth, e);
-    }
-
-    [Fact]
-    public void EnumMemberWithNumbers_NoIntegerValues()
-    {
-        var converter = new StringEnumConverter { AllowIntegerValues = false };
-
-        var e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"1\"", converter);
-
-        Assert.Equal(NumberNamesEnum.second, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"2\"", converter);
-
-        Assert.Equal(NumberNamesEnum.first, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"3\"", converter);
-
-        Assert.Equal(NumberNamesEnum.third, e);
-
-        e = JsonConvert.DeserializeObject<NumberNamesEnum>("\"-4\"", converter);
-
-        Assert.Equal(NumberNamesEnum.fourth, e);
-    }
-
-    [Fact]
-    public void AllowIntegerValueAndStringNumber()
-    {
-        var converter = new StringEnumConverter
-        {
-            AllowIntegerValues = false
-        };
-        var ex = XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<StoreColor>("\"1\"", converter));
-
-        Assert.Equal("Integer string '1' is not allowed.", ex.InnerException.Message);
-    }
-
-    [Fact]
-    public void AllowIntegerValueAndNegativeStringNumber()
-    {
-        var converter = new StringEnumConverter
-        {
-            AllowIntegerValues = false
-        };
-        var ex = XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<StoreColor>("\"-1\"", converter));
-
-        Assert.Equal("Integer string '-1' is not allowed.", ex.InnerException.Message);
-    }
-
-    [Fact]
-    public void AllowIntegerValueAndPositiveStringNumber()
-    {
-        var converter = new StringEnumConverter
-        {
-            AllowIntegerValues = false
-        };
-        var ex = XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<StoreColor>("\"+1\"", converter));
-
-        Assert.Equal("Integer string '+1' is not allowed.", ex.InnerException.Message);
-    }
-
-    [Fact]
-    public void AllowIntegerValueAndDash()
-    {
-        var converter = new StringEnumConverter
-        {
-            AllowIntegerValues = false
-        };
-        var ex = XUnitAssert.Throws<JsonSerializationException>(
-            () => JsonConvert.DeserializeObject<StoreColor>("\"-\"", converter));
-
-        Assert.Equal("Requested value '-' was not found.", ex.InnerException.Message);
     }
 
     [Fact]

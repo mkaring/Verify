@@ -27,26 +27,6 @@ public static class Extensions
         await Verify(tokens, null, sourceFile);
     }
 
-    public static async Task VerifyReaderState(
-        this JsonTextReader reader,
-        [CallerFilePath] string sourceFile = "")
-    {
-        var tokens = new List<TextReaderState>();
-        while (await reader.ReadAsync())
-        {
-            tokens.Add(
-                new TextReaderState(
-                    reader.TokenType,
-                    reader.LineNumber,
-                    reader.LinePosition,
-                    reader.Path,
-                    reader.Depth,
-                    reader.Value));
-        }
-
-        await Verify(tokens, null, sourceFile);
-    }
-
     public static string GetOffset(this DateTime d)
     {
         var chars = new char[8];

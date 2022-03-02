@@ -1857,10 +1857,6 @@ public class JsonSerializerCollectionsTests : TestFixtureBase
 
         Assert.Equal(@"[{""Name"":""Test1"",""ExpiryDate"":""2000-01-01T00:00:00Z"",""Price"":0.0,""Sizes"":null},{""Name"":""Test2"",""ExpiryDate"":""2000-01-01T00:00:00Z"",""Price"":0.0,""Sizes"":null},{""Name"":""Test3"",""ExpiryDate"":""2000-01-01T00:00:00Z"",""Price"":0.0,""Sizes"":null}]",
             stringWriter.GetStringBuilder().ToString());
-
-        var collectionNew = (ProductCollection) jsonSerializer.Deserialize(new JsonTextReader(new StringReader(stringWriter.GetStringBuilder().ToString())), typeof(ProductCollection));
-
-        Assert.Equal(collection, collectionNew);
     }
 
     [Fact]
@@ -2596,24 +2592,6 @@ public class JsonSerializerCollectionsTests : TestFixtureBase
             writer.WriteValue(value);
         }
 
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            var existingStrings = (List<string>) existingValue;
-            var newStrings = new List<string>(existingStrings);
-
-            reader.Read();
-
-            while (reader.TokenType != JsonToken.EndArray)
-            {
-                var s = (string) reader.Value;
-                newStrings.Add(s);
-
-                reader.Read();
-            }
-
-            return newStrings;
-        }
-
         public override bool CanConvert(Type type)
         {
             return type == typeof(List<string>);
@@ -2625,14 +2603,6 @@ public class JsonSerializerCollectionsTests : TestFixtureBase
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteValue(value);
-        }
-
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            var existingString = (string) existingValue;
-            var newString = existingString + (string) reader.Value;
-
-            return newString;
         }
 
         public override bool CanConvert(Type type)

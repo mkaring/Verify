@@ -14,16 +14,6 @@ public class JsonConverterAttributeClass : TestFixtureBase
             writer.WriteValue(user.UserName);
         }
 
-        public override object ReadJson(JsonReader reader, Type type, object existingValue, JsonSerializer serializer)
-        {
-            var user = new User
-            {
-                UserName = (string)reader.Value
-            };
-
-            return user;
-        }
-
         public override bool CanConvert(Type type)
         {
             return type == typeof(User);
