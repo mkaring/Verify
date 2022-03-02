@@ -283,30 +283,9 @@ The same approach can be used to verify the results and the change to `Sample.Te
 <!-- snippet: VerifyJson -->
 <a id='snippet-verifyjson'></a>
 ```cs
-[Fact]
-public Task VerifyJsonString()
-{
-    var json = "{'key': {'msg': 'No action taken'}}";
-    return VerifyJson(json);
-}
 
-[Fact]
-public Task VerifyJsonStream()
-{
-    var json = "{'key': {'msg': 'No action taken'}}";
-    var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-    return VerifyJson(stream);
-}
-
-[Fact]
-public Task VerifyJsonJToken()
-{
-    var json = "{'key': {'msg': 'No action taken'}}";
-    var target = JToken.Parse(json);
-    return VerifyJson(target);
-}
 ```
-<sup><a href='/src/Verify.Tests/Serialization/SerializationTests.cs#L1919-L1944' title='Snippet source file'>snippet source</a> | <a href='#snippet-verifyjson' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Verify.Tests/Serialization/SerializationTests.cs#L1841-L1844' title='Snippet source file'>snippet source</a> | <a href='#snippet-verifyjson' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Results in:
