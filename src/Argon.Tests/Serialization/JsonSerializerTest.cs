@@ -7,13 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 using System.Drawing;
 #endif
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization.Json;
 using TestObjects;
-using System.Xml.Linq;
-using System.Collections.Specialized;
 using System.Dynamic;
 using Formatting = Argon.Formatting;
 using JsonConstructor = Argon.JsonConstructorAttribute;
