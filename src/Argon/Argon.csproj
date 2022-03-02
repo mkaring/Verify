@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net461;netstandard2.0;net6</TargetFrameworks>
+    <TargetFrameworks Condition="$(Configuration) == 'DebugNet6'">net6</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFrameworks>netstandard2.0;net6</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.Globalization" />
+    <Using Include="Argon" />
+    <Using Include="System.Runtime.Serialization" />
+    <Using Include="System.Numerics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Remove="System.Net.Http" />
+    <PackageReference Include="ProjectDefaults" Version="1.0.68" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" Condition="$(Configuration) == 'Release'" />
+    <PackageReference Include="IndexRange" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

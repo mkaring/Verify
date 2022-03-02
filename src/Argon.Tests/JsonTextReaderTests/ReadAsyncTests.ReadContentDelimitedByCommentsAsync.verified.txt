@@ -1,0 +1,170 @@
+﻿[
+  {
+    TokenType: Comment,
+    LineNumber: 1,
+    LinePosition: 11,
+    Path: ,
+    Value: comment
+  },
+  {
+    TokenType: StartObject,
+    LineNumber: 1,
+    LinePosition: 12,
+    Path: 
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 1,
+    LinePosition: 23,
+    Path: ,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: PropertyName,
+    LineNumber: 1,
+    LinePosition: 28,
+    Path: Name,
+    Depth: 1,
+    Value: Name
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 1,
+    LinePosition: 39,
+    Path: Name,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: Boolean,
+    LineNumber: 1,
+    LinePosition: 43,
+    Path: Name,
+    Depth: 1,
+    Value: true
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 1,
+    LinePosition: 54,
+    Path: Name,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 1,
+    LinePosition: 66,
+    Path: Name,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: PropertyName,
+    LineNumber: 2,
+    LinePosition: 19,
+    Path: ExpiryDate,
+    Depth: 1,
+    Value: ExpiryDate
+  },
+  {
+    TokenType: Date,
+    LineNumber: 2,
+    LinePosition: 41,
+    Path: ExpiryDate,
+    Depth: 1,
+    Value: DateTime_1
+  },
+  {
+    TokenType: PropertyName,
+    LineNumber: 3,
+    LinePosition: 14,
+    Path: Price,
+    Depth: 1,
+    Value: Price
+  },
+  {
+    TokenType: Float,
+    LineNumber: 3,
+    LinePosition: 19,
+    Path: Price,
+    Depth: 1,
+    Value: 3.99
+  },
+  {
+    TokenType: PropertyName,
+    LineNumber: 4,
+    LinePosition: 14,
+    Path: Sizes,
+    Depth: 1,
+    Value: Sizes
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 4,
+    LinePosition: 25,
+    Path: Sizes,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: StartArray,
+    LineNumber: 4,
+    LinePosition: 26,
+    Path: Sizes,
+    Depth: 1
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 4,
+    LinePosition: 37,
+    Path: Sizes,
+    Depth: 2,
+    Value: comment
+  },
+  {
+    TokenType: String,
+    LineNumber: 5,
+    LinePosition: 17,
+    Path: Sizes[0],
+    Depth: 2,
+    Value: Small
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 5,
+    LinePosition: 28,
+    Path: Sizes[0],
+    Depth: 2,
+    Value: comment
+  },
+  {
+    TokenType: EndArray,
+    LineNumber: 5,
+    LinePosition: 29,
+    Path: Sizes,
+    Depth: 1
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 5,
+    LinePosition: 40,
+    Path: Sizes,
+    Depth: 1,
+    Value: comment
+  },
+  {
+    TokenType: EndObject,
+    LineNumber: 5,
+    LinePosition: 41,
+    Path: 
+  },
+  {
+    TokenType: Comment,
+    LineNumber: 5,
+    LinePosition: 52,
+    Path: ,
+    Value: comment
+  }
+]
