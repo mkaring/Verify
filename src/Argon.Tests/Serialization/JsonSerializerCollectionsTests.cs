@@ -2577,6 +2577,10 @@ public class JsonSerializerCollectionsTests : TestFixtureBase
                     yield return item;
                 }
             }
+            else
+            {
+                yield break;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
