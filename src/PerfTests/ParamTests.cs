@@ -1,7 +1,7 @@
 ﻿[TestFixture]
 public class ParamTests
 {
-    private static IEnumerable<int> testCases = Enumerable.Range(0, 100);
+    static IEnumerable<int> testCases = Enumerable.Range(0, 100);
 
     [TestCaseSource(nameof(testCases))]
     public Task LargeNumber(int input)
@@ -16,13 +16,10 @@ public class ParamTests
     [Test]
     public Task Alternative()
     {
-        var list = new List<TestResult>();
-        foreach (var input in Enumerable.Range(0, 100))
-        {
-            var result = input * 2;
-            list.Add(new(input, result));
-        }
+        var list = from input in Enumerable.Range(0, 100)
+            let result = input * 2
+            select new TestResult(input, result);
 
-        return Verify(list).UseDirectory("snaps");
+        return Verify(list);
     }
 }
