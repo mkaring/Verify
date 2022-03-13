@@ -14,11 +14,9 @@ public class Tests
 
     [Theory]
     [InlineData("a")]
-    public Task ReplaceInvalidParamChar(string value)
-    {
-        return Verify("foo")
+    public Task ReplaceInvalidParamChar(string value) =>
+        Verify("foo")
             .UseParameters(Path.GetInvalidPathChars().First());
-    }
 
     [Theory]
     [InlineData(1, 2)]
@@ -54,23 +52,17 @@ public class Tests
     }
 
     [Fact]
-    public Task WithNewline()
-    {
-        return Verify(new {Property = "F\roo"});
-    }
+    public Task WithNewline() =>
+        Verify(new {Property = "F\roo"});
 
     [ModuleInitializer]
-    public static void TreatAsStringInit()
-    {
+    public static void TreatAsStringInit() =>
         VerifierSettings.TreatAsString<ClassWithToString>(
             (target, _) => target.Property);
-    }
 
     [Fact]
-    public Task TreatAsString()
-    {
-        return Verify(new ClassWithToString {Property = "Foo"});
-    }
+    public Task TreatAsString() =>
+        Verify(new ClassWithToString {Property = "Foo"});
 
     class ClassWithToString
     {
@@ -148,12 +140,10 @@ public class Tests
     }
 
     [ModuleInitializer]
-    public static void SettingsArePassedInit()
-    {
+    public static void SettingsArePassedInit() =>
         VerifierSettings.RegisterStreamComparer(
             "SettingsArePassed",
             (_, _, _) => Task.FromResult(new CompareResult(true)));
-    }
 
     [Fact]
     public async Task SettingsArePassed()
@@ -165,51 +155,35 @@ public class Tests
     }
 
     [Fact]
-    public Task Throws()
-    {
-        return Verifier.Throws(MethodThatThrows);
-    }
+    public Task Throws() =>
+        Verifier.Throws(MethodThatThrows);
 
-    static void MethodThatThrows()
-    {
+    static void MethodThatThrows() =>
         throw new("The Message");
-    }
 
     [Fact]
-    public Task ThrowsNested()
-    {
-        return Verifier.Throws(Nested.MethodThatThrows);
-    }
+    public Task ThrowsNested() =>
+        Verifier.Throws(Nested.MethodThatThrows);
 
     static class Nested
     {
-        public static void MethodThatThrows()
-        {
+        public static void MethodThatThrows() =>
             throw new("The Message");
-        }
     }
 
     [Fact]
-    public Task ThrowsArgumentException()
-    {
-        return Verifier.Throws(MethodThatThrowsArgumentException);
-    }
+    public Task ThrowsArgumentException() =>
+        Verifier.Throws(MethodThatThrowsArgumentException);
 
-    static void MethodThatThrowsArgumentException()
-    {
+    static void MethodThatThrowsArgumentException() =>
         throw new ArgumentException("The Message", "The parameter");
-    }
 
     [Fact]
-    public Task ThrowsInheritedArgumentException()
-    {
-        return Verifier.Throws(MethodThatThrowsArgumentNullException);
-    }
+    public Task ThrowsInheritedArgumentException() =>
+        Verifier.Throws(MethodThatThrowsArgumentNullException);
 
-    static void MethodThatThrowsArgumentNullException()
-    {
+    static void MethodThatThrowsArgumentNullException() =>
         throw new ArgumentNullException("The parameter", "The Message");
-    }
 
     [Fact]
     public Task ThrowsAggregate()
@@ -219,74 +193,52 @@ public class Tests
         return Verifier.Throws(MethodThatThrowsAggregate, settings);
     }
 
-    static void MethodThatThrowsAggregate()
-    {
+    static void MethodThatThrowsAggregate() =>
         throw new AggregateException(new Exception("The Message1"), new Exception("The Message2"));
-    }
 
     [Fact]
-    public Task ThrowsTask()
-    {
-        return Verifier.ThrowsTask(TaskMethodThatThrows)
+    public Task ThrowsTask() =>
+        Verifier.ThrowsTask(TaskMethodThatThrows)
             .UniqueForRuntime()
             .ScrubLinesContaining("ThrowsAsync");
-    }
 
-    static Task TaskMethodThatThrows()
-    {
+    static Task TaskMethodThatThrows() =>
         throw new("The Message");
-    }
 
     [Fact]
-    public Task ThrowsTaskGeneric()
-    {
-        return Verifier.ThrowsTask(TaskMethodThatThrowsGeneric)
+    public Task ThrowsTaskGeneric() =>
+        Verifier.ThrowsTask(TaskMethodThatThrowsGeneric)
             .UniqueForRuntime()
             .ScrubLinesContaining("ThrowsAsync");
-    }
 
-    static Task<string> TaskMethodThatThrowsGeneric()
-    {
+    static Task<string> TaskMethodThatThrowsGeneric() =>
         throw new("The Message");
-    }
 
     [Fact]
-    public Task ThrowsValueTask()
-    {
-        return Verifier.ThrowsValueTask(ValueTaskMethodThatThrows)
+    public Task ThrowsValueTask() =>
+        Verifier.ThrowsValueTask(ValueTaskMethodThatThrows)
             .UniqueForRuntime()
             .ScrubLinesContaining("ThrowsAsync");
-    }
 
-    static ValueTask ValueTaskMethodThatThrows()
-    {
+    static ValueTask ValueTaskMethodThatThrows() =>
         throw new("The Message");
-    }
 
     [Fact]
-    public Task ThrowsValueTaskGeneric()
-    {
-        return Verifier.ThrowsValueTask(ValueTaskMethodThatThrowsGeneric)
+    public Task ThrowsValueTaskGeneric() =>
+        Verifier.ThrowsValueTask(ValueTaskMethodThatThrowsGeneric)
             .UniqueForRuntime()
             .ScrubLinesContaining("ThrowsAsync");
-    }
 
-    static ValueTask<string> ValueTaskMethodThatThrowsGeneric()
-    {
+    static ValueTask<string> ValueTaskMethodThatThrowsGeneric() =>
         throw new("The Message");
-    }
 
     [Fact]
-    public Task StringBuilder()
-    {
-        return Verify(new StringBuilder("value"));
-    }
+    public Task StringBuilder() =>
+        Verify(new StringBuilder("value"));
 
     [Fact]
-    public Task NestedStringBuilder()
-    {
-        return Verify(new {StringBuilder = new StringBuilder("value")});
-    }
+    public Task NestedStringBuilder() =>
+        Verify(new {StringBuilder = new StringBuilder("value")});
 
     [Fact]
     public Task TextWriter()
@@ -338,10 +290,8 @@ public class Tests
 #endif
 
     [Fact]
-    public Task Stream()
-    {
-        return Verify(new MemoryStream(new byte[] {1}));
-    }
+    public Task Stream() =>
+        Verify(new MemoryStream(new byte[] {1}));
 
     [Fact]
     public Task StreamNotAtStart()
@@ -360,26 +310,22 @@ public class Tests
     }
 
     [Fact]
-    public Task Streams()
-    {
-        return Verify(
+    public Task Streams() =>
+        Verify(
             new List<Stream>
             {
                 new MemoryStream(new byte[] {1}),
                 new MemoryStream(new byte[] {2})
             });
-    }
 
     [Fact]
-    public Task StreamsWithNull()
-    {
-        return Verify(
+    public Task StreamsWithNull() =>
+        Verify(
             new List<Stream?>
             {
                 new MemoryStream(new byte[] {1}),
                 null
             });
-    }
 
     [Fact]
     public async Task ShouldNotIgnoreCase()
@@ -392,9 +338,57 @@ public class Tests
     }
 
     [Fact]
-    public Task Newlines()
+    public Task Newlines() =>
+        Verify("a\r\nb\nc\rd\r\n");
+
+    [Fact]
+    public async Task TrailingNewlinesRaw()
     {
-        return Verify("a\r\nb\nc\rd\r\n");
+        var settings = new VerifySettings();
+        settings.DisableRequireUniquePrefix();
+        await Verify("a\r\n").AutoVerify();
+        await Verify("a\r\n", settings);
+        await Verify("a\n", settings);
+        await Verify("a\r", settings);
+        await Verify("a", settings);
+        await Verify("a\r", settings).AutoVerify();
+        await Verify("a\r\n", settings);
+        await Verify("a\n", settings);
+        await Verify("a\r", settings);
+        await Verify("a", settings);
+        await Verify("a\n", settings).AutoVerify();
+        await Verify("a\r\n", settings);
+        await Verify("a\n", settings);
+        await Verify("a\r", settings);
+        await Verify("a", settings);
+        await Verify("a", settings).AutoVerify();
+        await Verify("a\r\n", settings);
+        await Verify("a\n", settings);
+        await Verify("a\r", settings);
+        await Verify("a", settings);
+    }
+
+    [Fact]
+    public async Task TrailingNewlinesObject()
+    {
+        var file = Path.Combine(FileEx.GetFileDirectory(), "Tests.TrailingNewlinesObject.verified.txt");
+        var settings = new VerifySettings();
+        settings.DisableRequireUniquePrefix();
+        var target = new
+        {
+            s = "a"
+        };
+        File.WriteAllText(file, "{\n  s: a\n}");
+        await Verify(target, settings);
+
+        File.WriteAllText(file, "{\n  s: a\r}");
+        await Verify(target, settings);
+
+        File.WriteAllText(file, "{\n  s: a\n}\n");
+        await Verify(target, settings);
+
+        File.WriteAllText(file, "{\n  s: a\n}\r\n");
+        await Verify(target, settings);
     }
 
     class Element
@@ -441,10 +435,8 @@ public class Tests
     }
 
     [Fact]
-    public Task AsyncEnumerable()
-    {
-        return Verify(AsyncEnumerableMethod());
-    }
+    public Task AsyncEnumerable() =>
+        Verify(AsyncEnumerableMethod());
 
     static async IAsyncEnumerable<DisposableTarget> AsyncEnumerableDisposableMethod(DisposableTarget target)
     {
@@ -498,10 +490,8 @@ public class Tests
             return new();
         }
 
-        public void Dispose()
-        {
+        public void Dispose() =>
             throw new();
-        }
     }
 
     [Fact]
@@ -521,10 +511,8 @@ public class Tests
 #pragma warning restore 414
         public bool Disposed;
 
-        public void Dispose()
-        {
+        public void Dispose() =>
             Disposed = true;
-        }
     }
 
 #if !NETFRAMEWORK
@@ -545,18 +533,14 @@ public class Tests
     }
 
     [Fact]
-    public async Task VerifyFileWithAppend()
-    {
+    public async Task VerifyFileWithAppend() =>
         await VerifyFile("sample.txt")
             .AppendValue("key", "value");
-    }
 
     #region GetFilePath
 
-    string GetFilePath([CallerFilePath] string sourceFile = "")
-    {
-        return sourceFile;
-    }
+    string GetFilePath([CallerFilePath] string sourceFile = "") =>
+        sourceFile;
 
     #endregion
 
