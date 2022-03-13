@@ -1,0 +1,399 @@
+﻿[
+  {},
+  {
+    input: 1,
+    result: 2
+  },
+  {
+    input: 2,
+    result: 4
+  },
+  {
+    input: 3,
+    result: 6
+  },
+  {
+    input: 4,
+    result: 8
+  },
+  {
+    input: 5,
+    result: 10
+  },
+  {
+    input: 6,
+    result: 12
+  },
+  {
+    input: 7,
+    result: 14
+  },
+  {
+    input: 8,
+    result: 16
+  },
+  {
+    input: 9,
+    result: 18
+  },
+  {
+    input: 10,
+    result: 20
+  },
+  {
+    input: 11,
+    result: 22
+  },
+  {
+    input: 12,
+    result: 24
+  },
+  {
+    input: 13,
+    result: 26
+  },
+  {
+    input: 14,
+    result: 28
+  },
+  {
+    input: 15,
+    result: 30
+  },
+  {
+    input: 16,
+    result: 32
+  },
+  {
+    input: 17,
+    result: 34
+  },
+  {
+    input: 18,
+    result: 36
+  },
+  {
+    input: 19,
+    result: 38
+  },
+  {
+    input: 20,
+    result: 40
+  },
+  {
+    input: 21,
+    result: 42
+  },
+  {
+    input: 22,
+    result: 44
+  },
+  {
+    input: 23,
+    result: 46
+  },
+  {
+    input: 24,
+    result: 48
+  },
+  {
+    input: 25,
+    result: 50
+  },
+  {
+    input: 26,
+    result: 52
+  },
+  {
+    input: 27,
+    result: 54
+  },
+  {
+    input: 28,
+    result: 56
+  },
+  {
+    input: 29,
+    result: 58
+  },
+  {
+    input: 30,
+    result: 60
+  },
+  {
+    input: 31,
+    result: 62
+  },
+  {
+    input: 32,
+    result: 64
+  },
+  {
+    input: 33,
+    result: 66
+  },
+  {
+    input: 34,
+    result: 68
+  },
+  {
+    input: 35,
+    result: 70
+  },
+  {
+    input: 36,
+    result: 72
+  },
+  {
+    input: 37,
+    result: 74
+  },
+  {
+    input: 38,
+    result: 76
+  },
+  {
+    input: 39,
+    result: 78
+  },
+  {
+    input: 40,
+    result: 80
+  },
+  {
+    input: 41,
+    result: 82
+  },
+  {
+    input: 42,
+    result: 84
+  },
+  {
+    input: 43,
+    result: 86
+  },
+  {
+    input: 44,
+    result: 88
+  },
+  {
+    input: 45,
+    result: 90
+  },
+  {
+    input: 46,
+    result: 92
+  },
+  {
+    input: 47,
+    result: 94
+  },
+  {
+    input: 48,
+    result: 96
+  },
+  {
+    input: 49,
+    result: 98
+  },
+  {
+    input: 50,
+    result: 100
+  },
+  {
+    input: 51,
+    result: 102
+  },
+  {
+    input: 52,
+    result: 104
+  },
+  {
+    input: 53,
+    result: 106
+  },
+  {
+    input: 54,
+    result: 108
+  },
+  {
+    input: 55,
+    result: 110
+  },
+  {
+    input: 56,
+    result: 112
+  },
+  {
+    input: 57,
+    result: 114
+  },
+  {
+    input: 58,
+    result: 116
+  },
+  {
+    input: 59,
+    result: 118
+  },
+  {
+    input: 60,
+    result: 120
+  },
+  {
+    input: 61,
+    result: 122
+  },
+  {
+    input: 62,
+    result: 124
+  },
+  {
+    input: 63,
+    result: 126
+  },
+  {
+    input: 64,
+    result: 128
+  },
+  {
+    input: 65,
+    result: 130
+  },
+  {
+    input: 66,
+    result: 132
+  },
+  {
+    input: 67,
+    result: 134
+  },
+  {
+    input: 68,
+    result: 136
+  },
+  {
+    input: 69,
+    result: 138
+  },
+  {
+    input: 70,
+    result: 140
+  },
+  {
+    input: 71,
+    result: 142
+  },
+  {
+    input: 72,
+    result: 144
+  },
+  {
+    input: 73,
+    result: 146
+  },
+  {
+    input: 74,
+    result: 148
+  },
+  {
+    input: 75,
+    result: 150
+  },
+  {
+    input: 76,
+    result: 152
+  },
+  {
+    input: 77,
+    result: 154
+  },
+  {
+    input: 78,
+    result: 156
+  },
+  {
+    input: 79,
+    result: 158
+  },
+  {
+    input: 80,
+    result: 160
+  },
+  {
+    input: 81,
+    result: 162
+  },
+  {
+    input: 82,
+    result: 164
+  },
+  {
+    input: 83,
+    result: 166
+  },
+  {
+    input: 84,
+    result: 168
+  },
+  {
+    input: 85,
+    result: 170
+  },
+  {
+    input: 86,
+    result: 172
+  },
+  {
+    input: 87,
+    result: 174
+  },
+  {
+    input: 88,
+    result: 176
+  },
+  {
+    input: 89,
+    result: 178
+  },
+  {
+    input: 90,
+    result: 180
+  },
+  {
+    input: 91,
+    result: 182
+  },
+  {
+    input: 92,
+    result: 184
+  },
+  {
+    input: 93,
+    result: 186
+  },
+  {
+    input: 94,
+    result: 188
+  },
+  {
+    input: 95,
+    result: 190
+  },
+  {
+    input: 96,
+    result: 192
+  },
+  {
+    input: 97,
+    result: 194
+  },
+  {
+    input: 98,
+    result: 196
+  },
+  {
+    input: 99,
+    result: 198
+  }
+]

@@ -1,7 +1,7 @@
-﻿[UsesVerify]
+﻿[TestFixture]
 public class Tests
 {
-    [Fact]
+    [Test]
     public Task Test1()
     {
         var person = new Person
@@ -19,7 +19,7 @@ public class Tests
         return Verify(person);
     }
 
-    [Fact]
+    [Test]
     public Task Test2()
     {
         var person = new Person
